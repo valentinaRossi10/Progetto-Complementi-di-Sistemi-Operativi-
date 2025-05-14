@@ -1,0 +1,42 @@
+1.
+https://man7.org/linux/man-pages/man2/mmap.2.html 
+
+focus : MAP_SHARED
+              Share this mapping.  Updates to the mapping are visible to
+              other processes mapping the same region, and (in the case
+              of file-backed mappings) are carried through to the
+              underlying file.  (To precisely control when updates are
+              carried through to the underlying file requires the use of
+              msync(2).)
+
+https://man7.org/linux/man-pages/man2/msync.2.html
+
+focus : msync() flushes changes made to the in-core copy of a file that
+       was mapped into memory using mmap(2) back to the filesystem.
+       Without use of this call, there is no guarantee that changes are
+       written back before munmap(2) is called.  To be more precise, the
+       part of the file that corresponds to the memory area starting at
+       addr and having length length is updated.
+
+
+dubbi: 
+- indice array_list potrebbe essere offset a cui mmappo file ? 
+- se devo fare append alla fine di un file, all'interno del blocco come faccio a sapere offset da cui partire?
+	idea : dimensione del file%BLOCK_SIZE mi dirà offset nell'ultimo blocco. 
+
+MY_DISK 
+1. open an empty file with flag O_CREAT
+2. ftruncate it to have a size multiple of BLOCK_SIZE (4096?) 
+3. mmap it, use flag MAP_SHARED (see documentation) and combine it with the use of mysinc function (flushes changes back to the file system)
+4. file allocation: FAT quindi 
+	-array_list at the beginning of the disk 
+	-lista di indici iniziali di blocchi liberi 
+	-ha senso creare una struttura dati per ogni blocco 
+
+	
+FILE_STRUCTURE 
+	-FCB : will contain metadata (start index, final index (useful for append), owner, size, flag (is_directory),posso inserire offset dell'ultimo (ha senso?), ecc... ) 
+	- Directory normal FCB but additional list of indexes (start of files in the directory) 
+	
+	
+
