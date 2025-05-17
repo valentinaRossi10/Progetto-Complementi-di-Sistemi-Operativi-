@@ -20,7 +20,6 @@ focus : msync() flushes changes made to the in-core copy of a file that
 
 
 dubbi: 
-- indice array_list potrebbe essere offset a cui mmappo file ? 
 - se devo fare append alla fine di un file, all'interno del blocco come faccio a sapere offset da cui partire?
 	idea : dimensione del file%BLOCK_SIZE mi dirà offset nell'ultimo blocco. 
 
@@ -40,3 +39,7 @@ FILE_STRUCTURE
 	
 	
 
+
+PROSSIMO STEP : 
+strutture dati file e directory (creazione fcb ecc... ) 
+creazione, rimozione, ecc e implementazione a livello del disco
