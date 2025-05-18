@@ -43,3 +43,14 @@ FILE_STRUCTURE
 PROSSIMO STEP : 
 strutture dati file e directory (creazione fcb ecc... ) 
 creazione, rimozione, ecc e implementazione a livello del disco
+
+
+Creazione vrFS_constants.h con costanti (dimensione disco, dimensione blocchi, dimensione fat...). Implementazione disk.c e disk.h contenenti funzioni per inizializzazione e distruzione del disco, FAT e free_table, implementazione di funzioni utili per gestire accesso più immediato ai vari blocchi a partire da indice e viceversa. Testing delle funzioni con un breve main. 
+
+
+
+
+
+- modulo fcb.h gestisce questa struttura dati
+- DEVO METTERLA NEL DISCO, NON L'AVEVO MESSA 
+- NUOVO MODULO (TIPO FS) in cui gestisco creazione e tutte le altre operazioni ( usando questi due moduli che ho già creato )  

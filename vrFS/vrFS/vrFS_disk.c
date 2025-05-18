@@ -75,6 +75,17 @@ FreeTableFlags FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block)
     return disk_layout->free_table[index];
 }
 
+int first_free_block_index(DiskLayout* disk_layout){
+    for (int i = 0; i < MAX_NUM_BLOCK; i++){
+        if (disk_layout->free_table[i] == Free_Block){
+            return i;
+        }
+    }
+    return NO_FREE_BLOCKS;
+}
+
+
+
 
 int main(){
     printf("***********************TESTING DISK**************************\n");

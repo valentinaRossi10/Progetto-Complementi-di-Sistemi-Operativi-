@@ -32,3 +32,4 @@ Disk MemoryBlock_byFatIndex(int index, DiskLayout* disk_layout);
 int BlockIndex_byBlock(DiskLayout* disk_layout, Disk block);
 int FATValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
 FreeTableFlags FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
+int first_free_block_index(DiskLayout* disk_layout);

@@ -11,3 +11,6 @@
 
 //errors
 
+#define NO_FREE_BLOCKS -1 
+
+
