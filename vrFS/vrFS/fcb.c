@@ -24,7 +24,6 @@ FCB* FCB_init(){
     fcb->is_directory = -1;
     fcb->ownership = 0;
     fcb->size = 0;
-    List_init(&fcb->sub_files);
 
     return fcb;
 }
@@ -62,14 +61,4 @@ void FCB_print(FCB* fcb){
     printf("[filename: %s]\n[first block: %d - last block: %d]\n", fcb->filename, fcb->first_index, fcb->last_index);
     printf("[parent directory: %s]\n", fcb->directory->filename);
     printf("[is a directory: %d]\n", fcb->is_directory);
-    if (fcb->is_directory){
-        printf("[subfiles : {");
-        ListItem* aux = fcb->sub_files.first;
-        while(aux){
-            FCB* f = (FCB*)aux;
-            printf("\t%s\n" ,f->filename);
-            aux = aux->next;
-        }
-        printf("}\n");
-    }
 }

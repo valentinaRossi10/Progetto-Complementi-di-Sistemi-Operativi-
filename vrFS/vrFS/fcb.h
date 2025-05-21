@@ -11,9 +11,12 @@ typedef struct FCB{
     //permissions? 
     char* ownership;
     int is_directory; // 0 means it's not a directory 1 means it is a directory 
-    ListHead sub_files; // linked list of its subdirectories 
 }FCB;
 
 
 
 FCB* FCB_init();
+int FCB_free(FCB* fcb);
+FCB* FCB_byFilename(ListHead* head, char* filename);
+void FCBPtrList_print(ListHead* head);
+void FCB_print(FCB* fcb);

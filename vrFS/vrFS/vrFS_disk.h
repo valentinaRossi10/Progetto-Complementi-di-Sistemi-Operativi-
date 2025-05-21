@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "vrFS_constants.h"
+#include "fcb.h"
 
 typedef char* Disk;
 typedef int* FAT;
@@ -28,8 +29,15 @@ typedef struct DiskLayout{
 
 void disk_init();
 void disk_shutdown();
-Disk MemoryBlock_byFatIndex(int index, DiskLayout* disk_layout);
-int BlockIndex_byBlock(DiskLayout* disk_layout, Disk block);
-int FATValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
-FreeTableFlags FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
-int first_free_block_index(DiskLayout* disk_layout);
+void disk_format_block(DiskLayout* disk_layout, Disk block);
+int disk_load_file(DiskLayout* disk_layout, FCB* fcb);
+int disk_remove_file(DiskLayout* disk_layout, FCB* fcb);
+int disk_write(DiskLayout* disk_layout, void* content, int size, int index);
+char* disk_read(DiskLayout* disk_layout, int size, int index);
+
+
+Disk disk_MemoryBlock_byFatIndex(int index, DiskLayout* disk_layout);
+int disk_BlockIndex_byBlock(DiskLayout* disk_layout, Disk block);
+int disk_FATValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
+FreeTableFlags disk_FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
+int disk_first_free_block_index(DiskLayout* disk_layout);
