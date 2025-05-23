@@ -66,4 +66,6 @@ mancano funzioni nel disco:
 2. mkdir -> sul disco mi serve funzione per creare directory vuota (inizializzare lista di pcb) 
 
 
-per scrittura sul disco ???
+PER PROSSIMA VOLTA: 
+1. funzione per scrivere un file intero (nOn solo blocchi ) sul disco chi se ne occupa?, se se ne occupa modulo esterno avrò bisogno di funzione per accedere  a blocchi del file. se se ne occupa modulo del disco easy 
+

@@ -1,3 +1,5 @@
+#pragma once
+#include <assert.h>
 #include <stdio.h>
 #include "../vrFS_basics/linked_list.h" 
 
@@ -6,7 +8,7 @@ typedef struct FCB{
     char* filename;
     int first_index;
     int last_index;
-    FCB* directory;
+    struct FCB* directory;
     int size;
     //permissions? 
     char* ownership;

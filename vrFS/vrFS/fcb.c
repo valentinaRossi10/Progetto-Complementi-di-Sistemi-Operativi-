@@ -20,7 +20,7 @@ FCB* FCB_init(){
     fcb->filename = 0;
     fcb->first_index = -1; 
     fcb->last_index = -1;
-    fcb ->directory = -1;
+    fcb ->directory = 0;
     fcb->is_directory = -1;
     fcb->ownership = 0;
     fcb->size = 0;
