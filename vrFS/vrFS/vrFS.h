@@ -10,16 +10,14 @@
 
 
 
-void disk_format_block(DiskLayout* disk_layout, Disk block);
-int disk_load_file(DiskLayout* disk_layout, FCB* fcb);
-void disk_remove_file(DiskLayout* disk_layout, FCB* fcb);
-
-
-Disk disk_MemoryBlock_byFatIndex(DiskLayout* disk_layout, int index);
-int disk_BlockIndex_byBlock(DiskLayout* disk_layout, Disk block);
-int disk_FATValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
-FreeTableFlags disk_FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
-int disk_first_free_block_index(DiskLayout* disk_layout);
-
-
-
+void vrFS_format_block(DiskLayout* disk_layout, Disk block);
+void vrFS_format_disk(DiskLayout* disk_layout);
+int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb);
+void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb);
+Disk vrFS_MemoryBlock_byFatIndex(DiskLayout* disk_layout, int index);
+int vrFS_BlockIndex_byBlock(DiskLayout* disk_layout, Disk block);
+int vrFS_FATValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
+FreeTableFlags vrFS_FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block);
+int vrFS_first_free_block_index(DiskLayout* disk_layout);
+int vrFS_writeFile(DiskLayout* disk_layout, FCB* fcb, char* buffer, int buffer_size);
+int vrFS_readFile(DiskLayout* disk_layout, FCB* fcb, char* dest);

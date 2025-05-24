@@ -28,10 +28,9 @@ void disk_init(DiskLayout* disk_layout){ //remember to alloc memory
     
     //initializing FAT
 
-    for (int i = 0; i < MAX_NUM_BLOCK -1; i++){
-        disk_layout->fat[i] = i+1;
+    for (int i = 0; i < MAX_NUM_BLOCK; i++){
+        disk_layout->fat[i] = -1;
     }
-    disk_layout->fat[MAX_NUM_BLOCK-1] = -1;
 
     //initializing free_table 
 
@@ -43,13 +42,15 @@ void disk_init(DiskLayout* disk_layout){ //remember to alloc memory
 }
 
 void disk_shutdown(DiskLayout* disk_layout){
+    printf("shutdown...\n");
     disk_layout->fat = NULL;
     disk_layout->free_table = NULL;
     int ret = munmap(disk_layout->disk, DISK_SIZE);    
-    assert (ret > 0 && "munmap failed");
+    assert (ret == 0 && "munmap failed");
     disk_layout->disk = NULL;
-    ret = close(disk_layout->fd);
-    assert (ret > 0 && "close failed");
+    ret = close(fd);
+    assert (ret == 0 && "close failed");
+    printf("shutdown completed\n");
 }
 
 
@@ -62,12 +63,18 @@ int disk_write_block(DiskLayout* disk_layout, void* buffer, int size, int index,
         assert(size <= BLOCK_SIZE-block_offset);
     }
     int bytes_to_write = size;
-    if (lseek(fd, 2*FAT_SIZE + index*BLOCK_SIZE + block_offset, SEEK_SET) <  0) return -1; // move fd offset to this block
-    if (write(fd, buffer, bytes_to_write) != bytes_to_write) return -1; 
-    return 1;
+    if (lseek(fd, 2*FAT_SIZE + index*BLOCK_SIZE + block_offset, SEEK_SET) <  0) return WRITE_ERROR; // move fd offset to this block
+    if (write(fd, buffer, bytes_to_write) != bytes_to_write) return WRITE_ERROR; 
+    return bytes_to_write;
 }
 
-char* disk_read_block(DiskLayout* disk_layout, int size, int index);
+int disk_read_block(DiskLayout* disk_layout, char* buffer, int size, int index){
+    assert(index >= 0 && index < MAX_NUM_BLOCK && "invalid index");
+    if (lseek(fd, 2*FAT_SIZE + index*BLOCK_SIZE, SEEK_SET) <  0) return READ_ERROR; // move fd offset to this block
+    if (read(fd, buffer,size) != size) return READ_ERROR; 
+    return size;
+
+}
 
 
 

@@ -31,6 +31,6 @@ typedef struct DiskLayout{
 void disk_init();
 void disk_shutdown();
 int disk_write_block(DiskLayout* disk_layout, void* buffer, int size, int index, int block_offset);
-char* disk_read_block(DiskLayout* disk_layout, int size, int index);
+int disk_read_block(DiskLayout* disk_layout, char* buffer, int size, int index);
 
 

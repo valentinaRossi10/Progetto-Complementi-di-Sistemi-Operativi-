@@ -17,7 +17,7 @@ typedef struct FCB{
 
 
 
-FCB* FCB_init();
+void FCB_init(FCB* fcb);
 int FCB_free(FCB* fcb);
 FCB* FCB_byFilename(ListHead* head, char* filename);
 void FCBPtrList_print(ListHead* head);

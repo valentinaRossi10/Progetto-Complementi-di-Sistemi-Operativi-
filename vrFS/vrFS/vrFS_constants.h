@@ -12,5 +12,7 @@
 //errors
 
 #define NO_FREE_BLOCKS -1 
+#define READ_ERROR -2
+#define WRITE_ERROR -3
 
-
+#define SUCCESS 1

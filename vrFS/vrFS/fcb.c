@@ -8,13 +8,9 @@
 #define FCB_MEMSIZE (sizeof(FCB) + sizeof(int)) // check
 #define FCB_BLOCK_SIZE MAX_NUM_BLOCK*FCB_MEMSIZE
 
-static char _fcb_block[FCB_BLOCK_SIZE];
-static PoolAllocator _fcb_allocator;
 
-FCB* FCB_init(){
-    int res = PoolAllocator_init(& _fcb_allocator, FCB_SIZE, MAX_NUM_BLOCK, _fcb_block, FCB_BLOCK_SIZE);
-    assert(!res);
-    FCB* fcb = (FCB*)PoolAllocator_getBlock(& _fcb_allocator);
+
+void FCB_init(FCB* fcb){
     fcb->list.prev = 0;
     fcb->list.next = 0;
     fcb->filename = 0;
@@ -24,12 +20,10 @@ FCB* FCB_init(){
     fcb->is_directory = -1;
     fcb->ownership = 0;
     fcb->size = 0;
-
-    return fcb;
 }
 
 int FCB_free(FCB* fcb){
-    return PoolAllocator_releaseBlock(&_fcb_allocator, fcb);
+    return 0;
 }
 
 FCB* FCB_byFilename(ListHead* head, char* filename){
@@ -58,7 +52,11 @@ void FCBPtrList_print(ListHead* head){
 }
 
 void FCB_print(FCB* fcb){
-    printf("[filename: %s]\n[first block: %d - last block: %d]\n", fcb->filename, fcb->first_index, fcb->last_index);
-    printf("[parent directory: %s]\n", fcb->directory->filename);
-    printf("[is a directory: %d]\n", fcb->is_directory);
+    printf("\n{\n");
+    printf("\t[filename: %s]\n\t[first block: %d - last block: %d]\n", fcb->filename, fcb->first_index, fcb->last_index);
+    if(fcb->directory) printf("\t[parent directory: %s]\n", fcb->directory->filename);
+    else printf("\t[parent directory: root]\n");
+    printf("\t[is a directory: %d]\n", fcb->is_directory);
+    printf("\t[file size: %d]\n", fcb->size);
+    printf("}\n");
 }
