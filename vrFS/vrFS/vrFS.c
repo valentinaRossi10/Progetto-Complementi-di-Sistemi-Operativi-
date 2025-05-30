@@ -22,13 +22,15 @@ int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
 void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
     ///frees the blocks occupied by the file and formats them 
     int i = fcb->first_index;
+    int next;
     while(disk_layout->fat[i]!= -1){
+        next = disk_layout->fat[i];
         Disk block = vrFS_MemoryBlock_byFatIndex(disk_layout, i);
         vrFS_format_block(disk_layout, block);
         disk_layout->fat[i] = -1;
         assert(disk_layout->free_table[i] == Taken_Block && "block already free");
         disk_layout->free_table[i] = Free_Block;
-        i = disk_layout->fat[i];
+        i = next;
     }
     //aggiorno la directory 
     vrFS_remove_fcb_from_dir(disk_layout, fcb);
@@ -112,31 +114,4 @@ int vrFS_readFile(DiskLayout* disk_layout, FCB* fcb, char* dest){
     }
     return SUCCESS;
 }
-
-
-int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, char* filename){
-    int num_files = fcb_dir->size / sizeof(FCB);
-    char* dest = (char*)malloc(fcb_dir->size);
-    int ret = vrFS_readFile(disk_layout, fcb_dir, dest);
-    assert(ret == SUCCESS && "read error");
-    FCB* fcb_array = (FCB*)dest;
-    FCB* aux;
-    for (int i = 0; i < num_files; i++){
-        aux = fcb_array+i;
-        if (strcmp(filename, aux->filename) == 0) {
-            //deep copy
-            returned_fcb->directory = aux->directory;
-            returned_fcb->filename = aux->filename;
-            returned_fcb->first_index = aux->first_index;
-            returned_fcb->last_index = aux->last_index;
-            returned_fcb->is_directory = aux->is_directory;
-            returned_fcb->size = aux->size;
-            returned_fcb->ownership = aux->ownership;
-            return SUCCESS;
-        }
-    }
-    return FILE_NOT_FOUND;
-
-}
-
 

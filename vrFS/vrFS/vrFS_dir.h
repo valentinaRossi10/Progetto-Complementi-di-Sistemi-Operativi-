@@ -1,6 +1,7 @@
 #pragma once
 #include "vrFS_disk.h"
 #include "vrFS_block_manager.h"
+#include "vrFS.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>

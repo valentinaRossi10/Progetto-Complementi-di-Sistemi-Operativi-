@@ -47,7 +47,7 @@ void vrFS_update_fcb_in_dir(DiskLayout* disk_layout, FCB* updated_fcb) {
 
 void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, FCB* fcb_to_remove) {
     FCB* dir = fcb_to_remove->directory;
-    if (dir!= NULL) return;
+    if (dir== NULL) return;
 
     int num_files = dir->size/sizeof(FCB);
     char* buffer = (char*)malloc(dir->size);

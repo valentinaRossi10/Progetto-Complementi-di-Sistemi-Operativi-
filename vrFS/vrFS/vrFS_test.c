@@ -1,6 +1,7 @@
 #include "vrFS.h"
 #include "fcb.h"
 #include "vrFS_disk.h"
+#include "vrFS_dir.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -141,7 +142,15 @@ void test_2(){
     int r = vrFS_dir_search(&disk, &root, &fcb_to_populate,"PrimoFile.txt");
     FCB_print(&fcb);
     if(r!= FILE_NOT_FOUND) FCB_print(&fcb_to_populate);
-
+    else printf("not found\n");
+    printf("*************************DELETE FCB*************************\n");
+    FCB_print(&fcb);
+    vrFS_remove_file(&disk, &fcb);
+    r = vrFS_dir_search(&disk, &root, &fcb_to_populate,"PrimoFile.txt");
+    FCB_print(&fcb);
+    if(r!= FILE_NOT_FOUND) FCB_print(&fcb_to_populate);
+    else printf("not found\n");
+    
     printf("*************************DISK FORMAT AND SHUTDOWN******************************\n");
     vrFS_format_disk(&disk);
     disk_shutdown(&disk);

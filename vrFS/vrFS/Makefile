@@ -7,12 +7,14 @@ HEADERS=fcb.h\
 	vrFS_disk.h\
 	vrFS.h\
 	vrFS_block_manager.h\
+	vrFS_dir.h\
 	
 OBJS=fcb.o\
      vrFS_disk.o\
      vrFS.o\
 	 vrFS_block_manager.o\
-     
+     vrFS_dir.o\
+
 LIBS=vrFS.a
 
 BINS=vrFS_test

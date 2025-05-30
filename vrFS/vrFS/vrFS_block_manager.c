@@ -2,7 +2,7 @@
 
 Disk vrFS_MemoryBlock_byFatIndex(DiskLayout* disk_layout, int index){
     /// it returns the position of the block of number index from the start of the disk
-    assert(index*BLOCK_SIZE < DISK_SIZE && "invalid index");
+    assert(index < MAX_NUM_BLOCK && "invalid index");
     return disk_layout->start_of_files + (index*BLOCK_SIZE);
 }
 

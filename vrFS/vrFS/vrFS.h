@@ -16,4 +16,3 @@ int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb);
 void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb);
 int vrFS_writeFile(DiskLayout* disk_layout, FCB* fcb, char* buffer, int buffer_size);
 int vrFS_readFile(DiskLayout* disk_layout, FCB* fcb, char* dest);
-int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, char* filename);
