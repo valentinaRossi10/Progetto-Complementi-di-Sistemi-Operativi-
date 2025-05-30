@@ -14,5 +14,5 @@
 #define NO_FREE_BLOCKS -1 
 #define READ_ERROR -2
 #define WRITE_ERROR -3
-
+#define FILE_NOT_FOUND -4
 #define SUCCESS 1

@@ -20,7 +20,7 @@ BINS=pool_allocator_test\
 all:	$(LIBS) $(BINS)
 
 %.o:	%.c $(HEADERS)
-	$(CC) $(CCOPTS) -c -o $@  $<
+	$(CC) $(CCOPTS) -c -o $@  $< 
 
 libdisastrOS.a: $(OBJS) 
 	$(AR) -rcs $@ $^
@@ -30,7 +30,7 @@ pool_allocator_test:	pool_allocator_test.c $(LIBS)
 	$(CC) $(CCOPTS) -o $@ $^
 
 linked_list_test:	linked_list_test.c $(LIBS)
-	$(CC) $(CCOPTS) -o $@ $^
+	$(CC) $(CCOPTS) -o $@ $^ -g
 
 clean:
 	rm -rf *.o *~ $(LIBS) $(BINS)

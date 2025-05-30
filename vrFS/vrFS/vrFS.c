@@ -1,51 +1,6 @@
 #include "vrFS.h"
 #include <string.h>
 
-Disk vrFS_MemoryBlock_byFatIndex(DiskLayout* disk_layout, int index){
-    /// it returns the position of the block of number index from the start of the disk
-    assert(index*BLOCK_SIZE < DISK_SIZE && "invalid index");
-    return disk_layout->start_of_files + (index*BLOCK_SIZE);
-}
-
-int vrFS_BlockIndex_byBlock(DiskLayout* disk_layout, Disk block){
-    ///given a block it returns its index 
-    off_t offset = (block - disk_layout->start_of_files)/BLOCK_SIZE;
-    assert(offset >= 0 && offset < MAX_NUM_BLOCK && "invalid_offset");
-    return offset;
-}
-
-int vrFS_FATValue_byMemoryBlock(DiskLayout* disk_layout, Disk block){
-    //given the memory block it returns the index of the next block 
-    int index = vrFS_BlockIndex_byBlock(disk_layout, block);
-    return disk_layout->fat[index];
-}
-
-FreeTableFlags vrFS_FreeTableValue_byMemoryBlock(DiskLayout* disk_layout, Disk block){
-    //it returns Free_block if the block is free, Taken_block otherwise
-    int index = vrFS_BlockIndex_byBlock(disk_layout, block);
-    return disk_layout->free_table[index];
-}
-
-int vrFS_first_free_block_index(DiskLayout* disk_layout){
-    //it returns the index of the first free block 
-    for (int i = 0; i < MAX_NUM_BLOCK; i++){
-        if (disk_layout->free_table[i] == Free_Block){
-            return i;
-        }
-    }
-    return NO_FREE_BLOCKS;
-}
-
-void vrFS_format_block(DiskLayout* disk_layout, Disk block){
-    memset(block, 0, BLOCK_SIZE);
-} 
-
-void vrFS_format_disk(DiskLayout* disk_layout){
-    for (int i = 0; i < MAX_NUM_BLOCK; i++){
-        Disk block = vrFS_MemoryBlock_byFatIndex(disk_layout, i);
-        vrFS_format_block(disk_layout, block);
-    }
-}
 
 int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
     ///initializes the first index of the file (last index = first index for the moment, we will update it later with write function)
@@ -54,9 +9,15 @@ int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
     fcb->first_index = ret;
     disk_layout->free_table[fcb->first_index] = Taken_Block;    
     fcb->last_index = fcb->first_index;
-    // fat val is already -1 
+    // fat val is already -1
+      
+    FCB* dir_fcb = fcb->directory;
+    if (dir_fcb != NULL){
+        vrFS_writeFile(disk_layout, dir_fcb, (char*)fcb, sizeof(FCB));
+    }
     return fcb->first_index;
 }
+ 
 
 void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
     ///frees the blocks occupied by the file and formats them 
@@ -67,9 +28,13 @@ void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
         disk_layout->fat[i] = -1;
         assert(disk_layout->free_table[i] == Taken_Block && "block already free");
         disk_layout->free_table[i] = Free_Block;
-        i++;
+        i = disk_layout->fat[i];
     }
+    //aggiorno la directory 
+    vrFS_remove_fcb_from_dir(disk_layout, fcb);
 }
+
+
 
 
 int vrFS_writeFile(DiskLayout* disk_layout, FCB* fcb, char* buffer, int buffer_size){
@@ -122,6 +87,7 @@ int vrFS_writeFile(DiskLayout* disk_layout, FCB* fcb, char* buffer, int buffer_s
         } // else we do nothing because if the block is not ended yet we do not need to take another one
         offset = 0;
     }
+    vrFS_update_fcb_in_dir(disk_layout, fcb);
     return SUCCESS;
         
 }
@@ -146,3 +112,31 @@ int vrFS_readFile(DiskLayout* disk_layout, FCB* fcb, char* dest){
     }
     return SUCCESS;
 }
+
+
+int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, char* filename){
+    int num_files = fcb_dir->size / sizeof(FCB);
+    char* dest = (char*)malloc(fcb_dir->size);
+    int ret = vrFS_readFile(disk_layout, fcb_dir, dest);
+    assert(ret == SUCCESS && "read error");
+    FCB* fcb_array = (FCB*)dest;
+    FCB* aux;
+    for (int i = 0; i < num_files; i++){
+        aux = fcb_array+i;
+        if (strcmp(filename, aux->filename) == 0) {
+            //deep copy
+            returned_fcb->directory = aux->directory;
+            returned_fcb->filename = aux->filename;
+            returned_fcb->first_index = aux->first_index;
+            returned_fcb->last_index = aux->last_index;
+            returned_fcb->is_directory = aux->is_directory;
+            returned_fcb->size = aux->size;
+            returned_fcb->ownership = aux->ownership;
+            return SUCCESS;
+        }
+    }
+    return FILE_NOT_FOUND;
+
+}
+
+

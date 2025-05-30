@@ -4,7 +4,6 @@
 #include "../vrFS_basics/linked_list.h" 
 
 typedef struct FCB{
-    ListItem list; 
     char* filename;
     int first_index;
     int last_index;
@@ -20,5 +19,4 @@ typedef struct FCB{
 void FCB_init(FCB* fcb);
 int FCB_free(FCB* fcb);
 FCB* FCB_byFilename(ListHead* head, char* filename);
-void FCBPtrList_print(ListHead* head);
 void FCB_print(FCB* fcb);

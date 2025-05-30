@@ -6,12 +6,8 @@
 
 char* text = "ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentinaciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ciao sono valentina ";
 
+void test_1(){
 
-int main(){
-    
-    
-
-    printf("***********************TESTING DISK**************************\n");
     DiskLayout disk;
     disk_init(&disk);
 
@@ -98,4 +94,61 @@ int main(){
     printf("*************************disk format and shutdown*************************************\n");
     vrFS_format_disk(&disk);
     disk_shutdown(&disk);
+
+}
+
+void test_2(){
+    printf("*************************TESTING DISK*************************\n");
+    DiskLayout disk;
+    disk_init(&disk);
+    printf("*************************CREATING ROOT*************************\n");
+    FCB root;
+    FCB_init(&root);
+    root.directory = NULL;
+    root.filename = "root";
+    root.is_directory = 1;
+    root.ownership = "Valentina";
+    vrFS_load_file(&disk, &root);
+    FCB_print(&root);
+    printf("*************************CREATING FILE 1*************************\n");
+    FCB fcb;
+    FCB_init(&fcb);
+    fcb.filename = "PrimoFile.txt";
+    fcb.directory = &root;
+    fcb.ownership = "Valentina";
+    vrFS_load_file(&disk, &fcb);
+    vrFS_writeFile(&disk, &fcb, text, strlen(text));
+    FCB_print(&fcb);
+    FCB_print(&root);
+    printf("*************************CREATING FILE 2*************************\n");
+    
+    FCB fcb2;
+    FCB_init(&fcb2);
+    fcb2.filename = "SecondoFile.txt";
+    fcb2.directory = &root;
+    fcb2.ownership = "Valentina";
+    vrFS_load_file(&disk, &fcb2);
+    char* buffer1 = (char*)malloc(2*BLOCK_SIZE + 55+1);
+    memset(buffer1, 'v', 2*BLOCK_SIZE+55);
+    buffer1[2*BLOCK_SIZE+55] = '\0';
+
+    vrFS_writeFile(&disk, &fcb2, buffer1, strlen(buffer1));
+    FCB_print(&fcb2);
+    FCB_print(&root);
+
+    printf("*************************EXPLORING ROOT*************************\n");
+    FCB fcb_to_populate;
+    int r = vrFS_dir_search(&disk, &root, &fcb_to_populate,"PrimoFile.txt");
+    FCB_print(&fcb);
+    if(r!= FILE_NOT_FOUND) FCB_print(&fcb_to_populate);
+
+    printf("*************************DISK FORMAT AND SHUTDOWN******************************\n");
+    vrFS_format_disk(&disk);
+    disk_shutdown(&disk);
+
+
+}
+int main(){
+    
+    test_2();
 }

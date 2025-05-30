@@ -6,10 +6,12 @@ HEADERS=fcb.h\
 	vrFS_constants.h\
 	vrFS_disk.h\
 	vrFS.h\
+	vrFS_block_manager.h\
 	
 OBJS=fcb.o\
      vrFS_disk.o\
      vrFS.o\
+	 vrFS_block_manager.o\
      
 LIBS=vrFS.a
 
@@ -30,7 +32,7 @@ vrFS.a: $(OBJS)
 	$(RM) $(OBJS)
 
 vrFS_test:		vrFS_test.c $(LIBS)
-	$(CC) $(CCOPTS) -o $@ $^
+	$(CC) $(CCOPTS) -o $@ $^ -g
 
 clean:
 	rm -rf *.o *~ $(LIBS) $(BINS)
