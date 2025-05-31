@@ -1,4 +1,5 @@
-//shell functions numbers
+#pragma once
+//shell commands' numbers
 
 #define SHELL_FORMAT 1
 #define SHELL_MKDIR 2
@@ -10,6 +11,11 @@
 #define SHELL_RM 8
 #define SHELL_CLOSE 9
 
+//other constants
+
 #define MAX_NUM_FUNCTIONS 9
+#define MAX_NUM_ARGS 2
 
+//errors
 
+#define ERR_CMD_OUT_OF_RANGE -1

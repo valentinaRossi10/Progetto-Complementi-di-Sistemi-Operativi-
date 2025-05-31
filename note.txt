@@ -66,19 +66,21 @@ mancano funzioni nel disco:
 2. mkdir -> sul disco mi serve funzione per creare directory vuota (inizializzare lista di pcb) 
 
 
-PER PROSSIMA VOLTA: 
-1. funzione per scrivere un file intero (nOn solo blocchi ) sul disco chi se ne occupa?, se se ne occupa modulo esterno avrò bisogno di funzione per accedere  a blocchi del file. se se ne occupa modulo del disco easy 
-
-
-1. quando aggiungo un file non gestisco il fatto di aggiungerlo al contenuto della directory FCB free elimina
-
 documenta meglio le funzioni
 
-fcb da filename con questa nuova logica
+quando faccio start devo anche aver creato la root 
 
-since last commit : suddivisione ulteriore in altri due moduli -> vrFS.h diviso da vrFS_block_manager
-vrFS_dir nuovo -> si occupa di operazioni di aggiornamento delle directory 
 
-implementazione aggiornamento delle directory per aggiunta file, scrittura ecc 
+array :
+
+array[fun_num] = str_format (//formato di stringa inserita nella shell)
+array[fun_num] = puntatore a funzione corrispondente
+array[fun_num] = # args of function
+
+
+creo struct richiesta: 
+numero_di_funzione 
+argomenti 
+valore di ritorno 
 
 

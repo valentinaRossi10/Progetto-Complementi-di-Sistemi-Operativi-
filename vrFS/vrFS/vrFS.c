@@ -37,6 +37,7 @@ int vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
     }
     //update directory 
     vrFS_remove_fcb_from_dir(disk_layout, fcb);
+    return SUCCESS;
 }
 
 
