@@ -1,7 +1,6 @@
 #pragma once
 #include <assert.h>
 #include <stdio.h>
-#include "../vrFS_basics/linked_list.h" 
 
 typedef struct FCB{
     char* filename;
@@ -18,5 +17,4 @@ typedef struct FCB{
 
 void FCB_init(FCB* fcb);
 int FCB_free(FCB* fcb);
-FCB* FCB_byFilename(ListHead* head, char* filename);
 void FCB_print(FCB* fcb);

@@ -91,8 +91,6 @@ void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, FCB* fcb_to_remove) {
 }
 
 
-
-
 int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, char* filename){
     int num_files = fcb_dir->size / sizeof(FCB);
     char* dest = (char*)malloc(fcb_dir->size);
@@ -117,4 +115,7 @@ int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, ch
     return FILE_NOT_FOUND;
 
 }
+
+
+
 

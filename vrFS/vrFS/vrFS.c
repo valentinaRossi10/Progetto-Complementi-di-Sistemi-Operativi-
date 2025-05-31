@@ -19,8 +19,11 @@ int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
 }
  
 
-void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
+int vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
     ///frees the blocks occupied by the file and formats them 
+    if (fcb->is_directory == 1 && fcb->size != 0) {// this means we're trying to remove a directory which is not empty (rmdir only allowed when dir is empty)
+        return DIRECTORY_NOT_EMPTY;
+    }
     int i = fcb->first_index;
     int next;
     while(disk_layout->fat[i]!= -1){
@@ -32,7 +35,7 @@ void vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
         disk_layout->free_table[i] = Free_Block;
         i = next;
     }
-    //aggiorno la directory 
+    //update directory 
     vrFS_remove_fcb_from_dir(disk_layout, fcb);
 }
 
