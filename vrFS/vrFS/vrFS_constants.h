@@ -7,7 +7,7 @@
 #define TOTAL_SPACE BLOCK_SIZE*MAX_NUM_BLOCK
 #define FAT_SIZE MAX_NUM_BLOCK*sizeof(int)
 #define DISK_SIZE 2* FAT_SIZE + TOTAL_SPACE // 2 because free list and fat 
-
+#define MAX_FILENAME_LENGTH 20
 
 //errors
 

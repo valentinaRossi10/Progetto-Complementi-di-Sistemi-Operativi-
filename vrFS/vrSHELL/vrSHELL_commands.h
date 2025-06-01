@@ -5,7 +5,8 @@
 #include <stdarg.h>
 #include "vrSHELL_globals.h"
 #include "vrSHELL_constants.h"
-#include "vrSHELL_functions.h"
+
+
 
 typedef struct Command{
     int command_number;
@@ -14,5 +15,16 @@ typedef struct Command{
     int return_value;
 }Command;
 
+ 
+
 void vrSHELL_mappings();
 int command_wrapper(int command_number, ...);
+void vr_format();
+void vr_mkdir();
+void vr_cd();
+void vr_touch();
+void vr_cat();
+void vr_ls();
+void vr_append();
+void vr_rm();
+void vr_close();

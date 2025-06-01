@@ -84,3 +84,6 @@ argomenti
 valore di ritorno 
 
 
+quando eseguo comando processo nuovo 
+gestione scrittura/lettura da terminale
+

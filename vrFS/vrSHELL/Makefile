@@ -4,11 +4,11 @@ AR=ar
 
 HEADERS=vrSHELL_commands.h\
 	vrSHELL_constants.h\
-	vrSHELL_functions.h\
 	vrSHELL_globals.h\
 
 OBJS=vrSHELL_commands.o\
 	vrSHELL_test.o\
+	ls.o\
 
 LIBS=vrSHELL.a
 
@@ -28,7 +28,7 @@ vrSHELL.a: $(OBJS)
 	$(RM) $(OBJS)
 
 vrSHELL_test:		vrSHELL_test.c $(LIBS)
-	$(CC) $(CCOPTS) -o $@ $^ -g
+	$(CC) $(CCOPTS) -o $@ $^ ../vrFS/vrFS.a -g
 
 clean:
 	rm -rf *.o *~ $(LIBS) $(BINS)
