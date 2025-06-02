@@ -24,12 +24,33 @@ int main(){
     fcb.filename = "PrimoFile.txt";
     fcb.directory = &root;
     fcb.ownership = "Valentina";
+    fcb.is_directory = 0;
     vrFS_load_file(&disk, &fcb);
     vrFS_writeFile(&disk, &fcb, text, strlen(text));
 
+    FCB directory;
+    FCB_init(&directory);
+    directory.filename = "cartella";
+    directory.directory = &root;
+    directory.ownership = "Valentina";
+    directory.is_directory = 1;
+    vrFS_load_file(&disk, &directory);
 
-    disk_init(disk_layout);
+    FCB file_in_cartella;
+    FCB_init(&file_in_cartella);
+    file_in_cartella.filename = "FileInCartella.txt";
+    file_in_cartella.directory = &directory;
+    file_in_cartella.ownership = "Valentina";
+    file_in_cartella.is_directory = 0;
+    vrFS_load_file(&disk, &file_in_cartella);
+    vrFS_writeFile(&disk, &fcb, text, strlen(text));
+
+    
     vrSHELL_mappings();
     command_wrapper(SHELL_LS);
-    
+    command_wrapper(SHELL_CD, "cartella");
+    command_wrapper(SHELL_LS);
+
+    disk_shutdown(disk_layout);
+
 }

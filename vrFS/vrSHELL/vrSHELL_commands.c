@@ -64,10 +64,6 @@ int command_wrapper(int command_number, ...){
 }
 
 
-void vr_cd(){
-    char* arg1 = (char*)executing_command->command_args[0];
-    printf("arg 1 :%s\n", arg1);
-}
 
 
 void  vr_format() {

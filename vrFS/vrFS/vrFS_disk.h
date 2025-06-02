@@ -28,8 +28,8 @@ typedef struct DiskLayout{
     Disk start_of_files; // free_table contains all block with corresponding flag  
 }DiskLayout;
 
-void disk_init();
-void disk_shutdown();
+void disk_init(DiskLayout* disk_layout);
+void disk_shutdown(DiskLayout* disk_layout);
 int disk_write_block(DiskLayout* disk_layout, void* buffer, int size, int index, int block_offset);
 int disk_read_block(DiskLayout* disk_layout, char* buffer, int size, int index);
 

@@ -8,7 +8,8 @@ HEADERS=vrSHELL_commands.h\
 
 OBJS=vrSHELL_commands.o\
 	vrSHELL_test.o\
-	ls.o\
+	vr_ls.o\
+	vr_cd.o\
 
 LIBS=vrSHELL.a
 
