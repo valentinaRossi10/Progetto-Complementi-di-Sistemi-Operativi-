@@ -36,3 +36,15 @@ void FCB_print(FCB* fcb){
     printf("\t[file size: %d]\n", fcb->size);
     printf("}\n");
 }
+
+void FCB_deepcopy(FCB* src, FCB* dest){
+    assert(src && dest && "null pointers");
+    dest->directory = src->directory;
+    dest->filename = src->filename;
+    dest->first_index = src->first_index;
+    dest->last_index = src->last_index;
+    dest->is_directory = src->is_directory;
+    dest->size = src->size;
+    dest->ownership = src->ownership;
+        
+}

@@ -18,3 +18,4 @@ typedef struct FCB{
 void FCB_init(FCB* fcb);
 int FCB_free(FCB* fcb);
 void FCB_print(FCB* fcb);
+void FCB_deepcopy(FCB* src, FCB* dest);

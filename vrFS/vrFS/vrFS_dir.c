@@ -101,14 +101,7 @@ int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, ch
     for (int i = 0; i < num_files; i++){
         aux = fcb_array+i;
         if (strcmp(filename, aux->filename) == 0) {
-            //deep copy
-            returned_fcb->directory = aux->directory;
-            returned_fcb->filename = aux->filename;
-            returned_fcb->first_index = aux->first_index;
-            returned_fcb->last_index = aux->last_index;
-            returned_fcb->is_directory = aux->is_directory;
-            returned_fcb->size = aux->size;
-            returned_fcb->ownership = aux->ownership;
+            FCB_deepcopy(aux, returned_fcb);
             return SUCCESS;
         }
     }

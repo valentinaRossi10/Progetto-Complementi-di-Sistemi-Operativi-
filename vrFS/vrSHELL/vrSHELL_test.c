@@ -8,6 +8,7 @@ DiskLayout disk;
 DiskLayout* disk_layout;
 
 int main(){
+
     disk_layout = &disk;
     disk_init(disk_layout);
     FCB root;
@@ -45,11 +46,54 @@ int main(){
     vrFS_load_file(&disk, &file_in_cartella);
     vrFS_writeFile(&disk, &fcb, text, strlen(text));
 
+    FCB directory2;
+    FCB_init(&directory2);
+    directory2.filename = "cartella2";
+    directory2.directory = &directory;
+    directory2.ownership = "Valentina";
+    directory2.is_directory = 1;
+    vrFS_load_file(&disk, &directory2);
+
+
     
     vrSHELL_mappings();
+    printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("*********root : CD CARTELLA**************\n");
     command_wrapper(SHELL_CD, "cartella");
+    printf("current directory : %s\n", currentFCB->filename);
+    
+    printf("*********cartella : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("*********cartella : CD . **************\n");
+    command_wrapper(SHELL_CD, "./");
+    printf("current directory : %s\n", currentFCB->filename);
+
+    printf("*********cartella : CD .. **************\n");
+    command_wrapper(SHELL_CD, "../");
+    printf("current directory : %s\n", currentFCB->filename);
+
+
+    printf("*********root : CD ./cartella **************\n");
+    command_wrapper(SHELL_CD, "./cartella");
+    printf("current directory : %s\n", currentFCB->filename);
+    FCB file_in_cartella2;
+    FCB_init(&file_in_cartella2);
+    file_in_cartella2.filename = "FileInCartella2.txt";
+    file_in_cartella2.directory = currentFCB;
+    file_in_cartella2.ownership = "Valentina";
+    file_in_cartella2.is_directory = 0;
+    vrFS_load_file(&disk, &file_in_cartella2);
+    vrFS_writeFile(&disk, &file_in_cartella2, text, strlen(text));
+    printf("*********cartella : LS**************\n");
+    command_wrapper(SHELL_LS);
+
+    printf("*********cartella : CD ../cartella/cartella2 **************\n");
+    command_wrapper(SHELL_CD, "../cartella/cartella2");
+    printf("current directory : %s\n", currentFCB->filename);
+
+    
+    
 
     disk_shutdown(disk_layout);
 
