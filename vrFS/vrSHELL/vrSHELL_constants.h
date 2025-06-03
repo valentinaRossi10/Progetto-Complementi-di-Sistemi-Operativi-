@@ -21,3 +21,5 @@
 #define ERR_CMD_OUT_OF_RANGE -1
 #define CD_ERR_FILE_NOT_FOUND -2
 #define CD_ERR_FILE_NOT_A_DIR -3
+#define CAT_ERR_FILE_NOT_FOUND -4
+#define CAT_ERR_FILE_IS_A_DIR -5

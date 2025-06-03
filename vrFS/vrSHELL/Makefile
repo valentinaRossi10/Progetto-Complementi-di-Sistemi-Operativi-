@@ -10,6 +10,7 @@ OBJS=vrSHELL_commands.o\
 	vrSHELL_test.o\
 	vr_ls.o\
 	vr_cd.o\
+	vr_cat.o\
 
 LIBS=vrSHELL.a
 

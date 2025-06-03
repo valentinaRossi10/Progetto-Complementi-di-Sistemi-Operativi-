@@ -44,7 +44,7 @@ int main(){
     file_in_cartella.ownership = "Valentina";
     file_in_cartella.is_directory = 0;
     vrFS_load_file(&disk, &file_in_cartella);
-    vrFS_writeFile(&disk, &fcb, text, strlen(text));
+    vrFS_writeFile(&disk, &file_in_cartella, text, strlen(text));
 
     FCB directory2;
     FCB_init(&directory2);
@@ -59,12 +59,17 @@ int main(){
     vrSHELL_mappings();
     printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("**********CAT PrimoFile.txt************\n");
+    command_wrapper(SHELL_CAT, "PrimoFile.txt");
+    
     printf("*********root : CD CARTELLA**************\n");
     command_wrapper(SHELL_CD, "cartella");
     printf("current directory : %s\n", currentFCB->filename);
     
     printf("*********cartella : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("**********CAT FileInCartella.txt************\n");
+    command_wrapper(SHELL_CAT, "FileInCartella.txt");
     printf("*********cartella : CD . **************\n");
     command_wrapper(SHELL_CD, "./");
     printf("current directory : %s\n", currentFCB->filename);
@@ -88,10 +93,11 @@ int main(){
     printf("*********cartella : LS**************\n");
     command_wrapper(SHELL_LS);
 
-    printf("*********cartella : CD ../cartella/cartella2 **************\n");
-    command_wrapper(SHELL_CD, "../cartella/cartella2");
+    printf("*********cartella : CD ../cartella**************\n");
+    command_wrapper(SHELL_CD, "../cartella");
     printf("current directory : %s\n", currentFCB->filename);
-
+    printf("*********cartella : LS**************\n");
+    command_wrapper(SHELL_LS);
     
     
 

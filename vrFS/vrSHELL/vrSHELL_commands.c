@@ -74,9 +74,6 @@ void vr_touch() {
     printf("Called touch()\n");
 }
 
-void vr_cat() {
-    printf("Called cat()\n");
-}
 
 
 
