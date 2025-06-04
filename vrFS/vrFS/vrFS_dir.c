@@ -92,6 +92,7 @@ void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, FCB* fcb_to_remove) {
 
 
 int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, char* filename){
+    if (!fcb_dir->is_directory) return NOT_A_DIR;
     int num_files = fcb_dir->size / sizeof(FCB);
     char* dest = (char*)malloc(fcb_dir->size);
     int ret = vrFS_readFile(disk_layout, fcb_dir, dest);
