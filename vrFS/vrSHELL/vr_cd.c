@@ -25,7 +25,7 @@ void vr_cd(){
                 token = strtok(NULL,"/");
                 continue;
             }else{
-                 FCB* parent = malloc(sizeof(FCB));
+                 FCB* parent = (FCB*)malloc(sizeof(FCB));
                 *parent = *(currentFCB->directory);
                 currentFCB = parent;
                 token = strtok(NULL,"/");
@@ -35,15 +35,15 @@ void vr_cd(){
             int x = vrFS_dir_search(disk_layout, currentFCB, &dest_fcb, token);
             if (x == FILE_NOT_FOUND){
                 printf("cd: %s: File o directory non esistente\n",token);
-                executing_command->return_value = CD_ERR_FILE_NOT_FOUND;
+                executing_command->return_value = ERR_FILE_NOT_FOUND;
                 return;
             }
             if (!dest_fcb.is_directory){
                 printf("cd: %s: Non è una directory", dest_fcb.filename);
-                executing_command->return_value = CD_ERR_FILE_NOT_A_DIR;
+                executing_command->return_value = ERR_FILE_NOT_A_DIR;
                 return;
             }
-            FCB* new_fcb = malloc(sizeof(FCB));
+            FCB* new_fcb = (FCB*)malloc(sizeof(FCB));
             *new_fcb = dest_fcb;
             new_fcb->directory = currentFCB;  // set parent
             currentFCB = new_fcb;  

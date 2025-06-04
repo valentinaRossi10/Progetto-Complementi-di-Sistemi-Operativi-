@@ -31,6 +31,11 @@ void vrSHELL_mappings(){
     command_num_args[SHELL_LS] = 0;
     command_string_format[SHELL_LS] = "ls";
 
+    command_vector[SHELL_LS_WITH_ARG] = vr_ls;
+    command_num_args[SHELL_LS_WITH_ARG] = 1;
+    command_string_format[SHELL_LS_WITH_ARG] = "ls %s";
+
+
     command_vector[SHELL_APPEND] = vr_append;
     command_num_args[SHELL_APPEND] = 2; 
     command_string_format[SHELL_APPEND] = "append %s %s";
@@ -48,9 +53,10 @@ void vrSHELL_mappings(){
 //gets the arguments from the stack (variable number) and writes 
 //them into executing_command->command_args 
 int command_wrapper(int command_number, ...){
+    memset(executing_command->command_args, 0, sizeof(executing_command->command_args));
+    int num_args = command_num_args[command_number];
     va_list ap; 
     if (command_number < 0 || command_number > MAX_NUM_FUNCTIONS) return ERR_CMD_OUT_OF_RANGE;
-    int num_args = command_num_args[command_number];
     va_start(ap,command_number);
     for (int i = 0; i < num_args; i++){
         executing_command->command_args[i] = va_arg(ap, long int);
@@ -60,6 +66,8 @@ int command_wrapper(int command_number, ...){
     ShellCommandType cmd = command_vector[command_number];
     assert(cmd);
     (*cmd)();
+    
+
     return executing_command->return_value;
 }
 

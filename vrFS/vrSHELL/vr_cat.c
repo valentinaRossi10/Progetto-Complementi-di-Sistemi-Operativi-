@@ -8,12 +8,12 @@ void vr_cat(){
     FCB file_to_cat;
     int x = vrFS_dir_search(disk_layout, currentFCB,&file_to_cat, filename);
     if (x == FILE_NOT_FOUND) {
-        executing_command->return_value = CAT_ERR_FILE_NOT_FOUND;
+        executing_command->return_value = ERR_FILE_NOT_FOUND;
         printf("cat: %s: File o directory non esistente\n", filename);
         return;
     }
     if (file_to_cat.is_directory) {
-        executing_command->return_value = CAT_ERR_FILE_IS_A_DIR;
+        executing_command->return_value = ERR_FILE_IS_A_DIR;
         printf("cat: %s: È una directory\n", file_to_cat.filename);
         return;
 

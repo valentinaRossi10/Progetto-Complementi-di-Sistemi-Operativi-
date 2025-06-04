@@ -59,6 +59,9 @@ int main(){
     vrSHELL_mappings();
     printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("*********root : LS root ./cartella**************\n");
+    command_wrapper(SHELL_LS_WITH_ARG, "./cartella");
+    
     printf("**********CAT PrimoFile.txt************\n");
     command_wrapper(SHELL_CAT, "PrimoFile.txt");
     
