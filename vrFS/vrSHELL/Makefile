@@ -11,6 +11,7 @@ OBJS=vrSHELL_commands.o\
 	vr_ls.o\
 	vr_cd.o\
 	vr_cat.o\
+	vr_touch.o\
 
 LIBS=vrSHELL.a
 

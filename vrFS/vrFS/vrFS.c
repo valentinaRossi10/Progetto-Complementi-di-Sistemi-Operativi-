@@ -5,7 +5,7 @@
 int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
     ///initializes the first index of the file (last index = first index for the moment, we will update it later with write function)
     int ret = vrFS_first_free_block_index(disk_layout);
-    assert(ret != NO_FREE_BLOCKS && "memory full");
+    if (ret == NO_FREE_BLOCKS) return NO_FREE_BLOCKS;
     fcb->first_index = ret;
     disk_layout->free_table[fcb->first_index] = Taken_Block;    
     fcb->last_index = fcb->first_index;

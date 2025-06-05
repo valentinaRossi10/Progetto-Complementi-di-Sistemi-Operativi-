@@ -8,13 +8,11 @@ void vr_cat(){
     
     FCB* file_to_cat;
     file_to_cat = currentFCB;
-
     strcpy(filename, (char*)executing_command->command_args[0]);
 
     char* token = strtok(filename,"/");
     FCB dest_fcb;
     while(token != NULL){
-        printf("token %s\n", token);
         if (strcmp(".", token) == 0) {
             token = strtok(NULL, "/");
             continue;
@@ -38,11 +36,8 @@ void vr_cat(){
                 return;
             }
             if (dest_fcb.is_directory) file_to_cat = &dest_fcb;
-            token = strtok(NULL,"/");
-
-            
+            token = strtok(NULL,"/"); 
         }
-
     }
     if (dest_fcb.is_directory){
         printf("cat: %s: È una directory\n", dest_fcb.filename);

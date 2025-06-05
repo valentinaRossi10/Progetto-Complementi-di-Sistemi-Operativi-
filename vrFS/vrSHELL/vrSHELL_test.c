@@ -59,6 +59,15 @@ int main(){
     vrSHELL_mappings();
     printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("**********ROOT : touch fileToccato.txt****************\n");
+    command_wrapper(SHELL_TOUCH, "FileToccato.txt");
+    printf("**********ROOT : touch ./cartella/file2Toccato.txt****************\n");
+    command_wrapper(SHELL_TOUCH, "./cartella/File2Toccato.txt");
+    
+    printf("*********root : LS**************\n");
+    command_wrapper(SHELL_LS);
+    
+
     printf("**********ROOT: CAT cartella.FileInCartella.txt************\n");
     command_wrapper(SHELL_CAT, "./cartella/FileInCartella.txt");
     

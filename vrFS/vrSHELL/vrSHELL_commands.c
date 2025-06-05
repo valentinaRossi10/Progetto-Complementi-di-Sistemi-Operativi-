@@ -78,9 +78,7 @@ void  vr_format() {
     printf("Called format()\n");
 }
 
-void vr_touch() {
-    printf("Called touch()\n");
-}
+
 
 
 
