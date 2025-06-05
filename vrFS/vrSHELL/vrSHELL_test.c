@@ -59,10 +59,16 @@ int main(){
     vrSHELL_mappings();
     printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);
+    printf("**********ROOT : mkdir cartellaMK*********************\n");
+    command_wrapper(SHELL_MKDIR, "cartellaMK");
+
+    printf("**********ROOT : mkdir cartella/cartella2MK*********************\n");
+    command_wrapper(SHELL_MKDIR, "cartella/cartella2MK");
+
     printf("**********ROOT : touch fileToccato.txt****************\n");
     command_wrapper(SHELL_TOUCH, "FileToccato.txt");
-    printf("**********ROOT : touch ./cartella/file2Toccato.txt****************\n");
-    command_wrapper(SHELL_TOUCH, "./cartella/File2Toccato.txt");
+    printf("**********ROOT : touch ./cartella/cartella2MK/file2Toccato.txt****************\n");
+    command_wrapper(SHELL_TOUCH, "./cartella/cartella2MK/File2Toccato.txt");
     
     printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);

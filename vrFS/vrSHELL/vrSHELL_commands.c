@@ -94,6 +94,3 @@ void vr_rm() {
 void vr_close(){
 
 }
-void vr_mkdir(){
-    
-}
