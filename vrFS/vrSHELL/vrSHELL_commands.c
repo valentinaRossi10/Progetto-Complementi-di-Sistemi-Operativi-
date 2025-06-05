@@ -83,9 +83,6 @@ void  vr_format() {
 
 
 
-void vr_append() {
-    printf("Called append()\n");
-}
 
 
 void vr_close(){

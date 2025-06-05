@@ -67,8 +67,7 @@ int main(){
 
     printf("**********ROOT : touch fileToccato.txt****************\n");
     command_wrapper(SHELL_TOUCH, "FileToccato.txt");
-    printf("**********ROOT : rm fileToccato.txt****************\n");
-    command_wrapper(SHELL_RM, "FileToccato.txt");
+
     
     printf("**********ROOT : touch ./cartella/cartella2MK/file2Toccato.txt****************\n");
     command_wrapper(SHELL_TOUCH, "./cartella/cartella2MK/File2Toccato.txt");
@@ -89,6 +88,10 @@ int main(){
     printf("*********root : CD CARTELLA**************\n");
     command_wrapper(SHELL_CD, "cartella");
     printf("current directory : %s\n", currentFCB->filename);
+    printf("**********cartella: APPEND lol a ../filetoccato*************\n");
+    command_wrapper(SHELL_APPEND,"../FileToccato.txt", "lol");
+    printf("**********cartella: CAT ../filetoccato*************\n");
+    command_wrapper(SHELL_CAT,"../FileToccato.txt");
     
     printf("*********cartella : LS**************\n");
     command_wrapper(SHELL_LS);
@@ -103,7 +106,8 @@ int main(){
     printf("current directory : %s\n", currentFCB->filename);
     printf("*********root: try remove cartella (not allowed)************\n");
     command_wrapper(SHELL_RM, "cartella");
-
+    printf("******************root cat file toccato (should be  lol)*******************\n");
+    command_wrapper(SHELL_CAT, "FileToccato.txt");
     printf("*********root : CD ./cartella **************\n");
     command_wrapper(SHELL_CD, "./cartella");
     printf("current directory : %s\n", currentFCB->filename);
