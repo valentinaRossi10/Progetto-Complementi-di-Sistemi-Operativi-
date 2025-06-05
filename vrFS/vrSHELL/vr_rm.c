@@ -1,17 +1,20 @@
 #include "vrSHELL_commands.h"
 #include "../vrFS/vrFS.h"
 #include <stdio.h>
+#include <string.h>
 
 
-void vr_cat(){
+void vr_rm(){
+    
     char* filename = (char*)malloc(MAX_FILENAME_LENGTH+1);
     
-    FCB* file_to_cat;
-    file_to_cat = currentFCB;
+    FCB* aux_dir;
+    aux_dir = currentFCB;
     strcpy(filename, (char*)executing_command->command_args[0]);
 
     char* token = strtok(filename,"/");
     FCB dest_fcb;
+
     while(token != NULL){
         if (strcmp(".", token) == 0) {
             token = strtok(NULL, "/");
@@ -23,40 +26,38 @@ void vr_cat(){
                 continue;
             }else{
                 FCB* parent = (FCB*)malloc(sizeof(FCB));
-                *parent = *(file_to_cat->directory);
-                file_to_cat = parent;
+                *parent = *(aux_dir->directory);
+                aux_dir = parent;
                 token = strtok(NULL,"/");
                 continue;
             }
         }else {
-            int x = vrFS_dir_search(disk_layout, file_to_cat, &dest_fcb, token);
+            int x = vrFS_dir_search(disk_layout, aux_dir, &dest_fcb, token);
             if (x == FILE_NOT_FOUND){
-                printf("cat: %s: File o directory non esistente\n",token);
+                printf("rm: %s: File o directory non esistente\n",token);
                 executing_command->return_value = ERR_FILE_NOT_FOUND;
                 return;
             }
-            if (dest_fcb.is_directory) {
-                file_to_cat = &dest_fcb;
+            if (dest_fcb.is_directory){
+                aux_dir = &dest_fcb;
                 token = strtok(NULL,"/");
+                continue;
             }else{
                 if (strtok(NULL,"/") != NULL){ //trying to access a file as if it was a directory
-                    printf("cat: %s: File o directory non esistente\n", token);
-                    executing_command->return_value = FILE_NOT_FOUND;
-                }break;
+                    printf("rm: %s: File o directory non esistente\n", token);
+                    executing_command->return_value = ERR_FILE_NOT_FOUND;
+                    return;
+                }
+                break;
             }
         }
     }
-    if (dest_fcb.is_directory){
-        printf("cat: %s: È una directory\n", dest_fcb.filename);
-        executing_command->return_value = ERR_FILE_IS_A_DIR;
-        return;
-           
+    int x = vrFS_remove_file(disk_layout, &dest_fcb);
+    if (x == DIRECTORY_NOT_EMPTY){
+        executing_command->return_value = DIRECTORY_NOT_EMPTY;
+        printf("rm: %s: directory non vuota\n", dest_fcb.filename);
     }
-    char* dest = (char*)malloc(dest_fcb.size);
-    vrFS_readFile(disk_layout, &dest_fcb, dest);
-    printf("%s\n", dest);
-    executing_command->return_value = SUCCESS;
-    
+    else executing_command->return_value = SUCCESS;
 
-    
 }
+

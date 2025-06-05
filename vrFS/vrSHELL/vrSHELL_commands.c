@@ -87,9 +87,6 @@ void vr_append() {
     printf("Called append()\n");
 }
 
-void vr_rm() {
-    printf("Called rm()\n");
-}
 
 void vr_close(){
 
