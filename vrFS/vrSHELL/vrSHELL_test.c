@@ -130,6 +130,5 @@ int main(){
     
     
 
-    disk_shutdown(disk_layout);
-
+    command_wrapper(SHELL_CLOSE);
 }

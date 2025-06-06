@@ -23,3 +23,4 @@
 #define ERR_FILE_NOT_FOUND -2
 #define ERR_FILE_NOT_A_DIR -3
 #define ERR_FILE_IS_A_DIR -5
+#define ERR_FORMAT -4

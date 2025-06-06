@@ -4,5 +4,6 @@
 
 
 void vr_close(){
-    
+    disk_shutdown(disk_layout);
+    printf("disk closed\n");
 }
