@@ -8,9 +8,10 @@ DiskLayout disk;
 DiskLayout* disk_layout;
 
 int main(){
-
+    vrSHELL_mappings();
     disk_layout = &disk;
-    disk_init(disk_layout, 4096,"vrFS_disk");
+    command_wrapper(SHELL_FORMAT, "vrFS_disk", 4096);
+
     FCB root;
     FCB_init(&root);
     root.directory = NULL;
@@ -56,7 +57,6 @@ int main(){
 
 
     
-    vrSHELL_mappings();
     printf("*********root : LS**************\n");
     command_wrapper(SHELL_LS);
     printf("**********ROOT : mkdir cartellaMK*********************\n");

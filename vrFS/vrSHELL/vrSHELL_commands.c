@@ -45,7 +45,7 @@ void vrSHELL_mappings(){
     command_string_format[SHELL_RM] = "rm %s";
 
     command_vector[SHELL_CLOSE] = vr_close;
-    command_num_args[SHELL_CLOSE] = 0; // CHE COMANDO È ???
+    command_num_args[SHELL_CLOSE] = 0;
     command_string_format[SHELL_CLOSE] = "close";
 }
 
@@ -71,17 +71,3 @@ int command_wrapper(int command_number, ...){
     return executing_command->return_value;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-void vr_close(){
-
-}

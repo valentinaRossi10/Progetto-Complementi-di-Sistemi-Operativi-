@@ -15,9 +15,11 @@ int TOTAL_SPACE;
 int DISK_SIZE;
 
 
-void disk_init(DiskLayout* disk_layout, int block_num, char* filename){ //remember to alloc memory 
+int disk_init(DiskLayout* disk_layout, int block_num, char* filename){ //remember to alloc memory 
+    if (block_num > MAX_ALLOWED_BLOCKS) return DISK_INIT_ERROR;
     fd = open(filename, O_RDWR|O_CREAT, 0660); 
     assert(fd > 0 && "open failed");
+
 
     MAX_NUM_BLOCK = block_num;
     TOTAL_SPACE = BLOCK_SIZE*MAX_NUM_BLOCK;
@@ -47,7 +49,7 @@ void disk_init(DiskLayout* disk_layout, int block_num, char* filename){ //rememb
     for (int i = 0; i < MAX_NUM_BLOCK; i++){
         disk_layout->free_table[i] = Free_Block;
     }
-
+    return SUCCESS;
 
 }
 

@@ -8,7 +8,9 @@ extern int TOTAL_SPACE;
 extern int DISK_SIZE;
 
 #define BLOCK_SIZE 4000
+#define MAX_ALLOWED_BLOCKS 100000
 #define MAX_FILENAME_LENGTH 100
+
 
 //errors
 
@@ -19,6 +21,7 @@ extern int DISK_SIZE;
 #define FILE_NOT_FOUND -4
 #define DIRECTORY_NOT_EMPTY -5
 #define NOT_A_DIR -6
+#define DISK_INIT_ERROR -7
 
 
 
