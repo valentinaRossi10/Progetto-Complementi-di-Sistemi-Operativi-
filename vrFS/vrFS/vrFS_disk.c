@@ -9,17 +9,27 @@
 #include <string.h>
  
 int fd; 
-void disk_init(DiskLayout* disk_layout){ //remember to alloc memory 
-    fd = open("./diskFile", O_RDWR|O_CREAT, 0660); 
+int MAX_NUM_BLOCK;
+int FAT_SIZE;
+int TOTAL_SPACE;
+int DISK_SIZE;
+
+
+void disk_init(DiskLayout* disk_layout, int block_num, char* filename){ //remember to alloc memory 
+    fd = open(filename, O_RDWR|O_CREAT, 0660); 
     assert(fd > 0 && "open failed");
+
+    MAX_NUM_BLOCK = block_num;
+    TOTAL_SPACE = BLOCK_SIZE*MAX_NUM_BLOCK;
+    FAT_SIZE = MAX_NUM_BLOCK*sizeof(int);
+    DISK_SIZE = 2* FAT_SIZE + TOTAL_SPACE; // 2 because free list and fat 
 
     off_t disk_dimension = DISK_SIZE;
     int ret = ftruncate(fd, disk_dimension);
     assert(ret != -1 && "ftruncate failed");
 
     // the flag MAP_SHARED allows us to do side effect on the disk
-    // to flush our changes to the persistent memory we combine it with msync
-    // as mmap documentation suggests
+   
 
     disk_layout->disk = (Disk)mmap(NULL, disk_dimension, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
     disk_layout->fat = (int*)disk_layout->disk; 

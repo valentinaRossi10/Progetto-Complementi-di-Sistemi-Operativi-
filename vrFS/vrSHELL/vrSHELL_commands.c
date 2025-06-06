@@ -74,9 +74,6 @@ int command_wrapper(int command_number, ...){
 
 
 
-void  vr_format() {
-    printf("Called format()\n");
-}
 
 
 

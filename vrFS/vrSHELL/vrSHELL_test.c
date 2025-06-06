@@ -10,7 +10,7 @@ DiskLayout* disk_layout;
 int main(){
 
     disk_layout = &disk;
-    disk_init(disk_layout);
+    disk_init(disk_layout, 4096,"vrFS_disk");
     FCB root;
     FCB_init(&root);
     root.directory = NULL;

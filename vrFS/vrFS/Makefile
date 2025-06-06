@@ -17,7 +17,7 @@ OBJS=fcb.o\
 
 LIBS=vrFS.a
 
-BINS=vrFS_test
+#BINS=vrFS_test
 
 #vrFS_test
 
@@ -33,8 +33,8 @@ vrFS.a: $(OBJS)
 	$(AR) -rcs $@ $^
 	$(RM) $(OBJS)
 
-vrFS_test:		vrFS_test.c $(LIBS)
-	$(CC) $(CCOPTS) -o $@ $^ -g
+#vrFS_test:		vrFS_test.c $(LIBS)
+#	$(CC) $(CCOPTS) -o $@ $^ -g
 
 clean:
 	rm -rf *.o *~ $(LIBS) $(BINS)
