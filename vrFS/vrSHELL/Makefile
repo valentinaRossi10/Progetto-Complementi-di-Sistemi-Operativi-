@@ -5,7 +5,8 @@ AR=ar
 HEADERS=vrSHELL_commands.h\
 	vrSHELL_constants.h\
 	vrSHELL_globals.h\
-
+	vrSHELL.h\
+	
 OBJS=vrSHELL_commands.o\
 	vrSHELL_test.o\
 	vr_ls.o\
@@ -16,7 +17,8 @@ OBJS=vrSHELL_commands.o\
 	vr_rm.o\
 	vr_append.o\
 	vr_format.o\
-	vr_close\
+	vr_close.o\
+	vr_SHELL.o\
 
 LIBS=vrSHELL.a
 

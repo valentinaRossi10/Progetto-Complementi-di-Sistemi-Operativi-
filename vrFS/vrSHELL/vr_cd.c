@@ -2,6 +2,7 @@
 #include "../vrFS/vrFS.h"
 #include <stdio.h>
 #include <string.h>
+#include "vr_SHELL.h"
 
 void vr_cd(){
 
@@ -28,6 +29,7 @@ void vr_cd(){
                  FCB* parent = (FCB*)malloc(sizeof(FCB));
                 *parent = *(currentFCB->directory);
                 currentFCB = parent;
+                vr_shell_update_path(token, up);
                 token = strtok(NULL,"/");
                 continue;
             }
@@ -47,7 +49,8 @@ void vr_cd(){
             *new_fcb = dest_fcb;
             new_fcb->directory = currentFCB;  // set parent
             currentFCB = new_fcb;  
-            
+            vr_shell_update_path(new_fcb->filename, down);
+
             token = strtok(NULL,"/");
 
         }

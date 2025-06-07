@@ -7,6 +7,9 @@
 #include "vrSHELL_constants.h"
 
 
+char* command_string_format[MAX_NUM_FUNCTIONS];
+ShellCommandType command_vector[MAX_NUM_FUNCTIONS];
+int command_num_args[MAX_NUM_FUNCTIONS];
 
 typedef struct Command{
     int command_number;
