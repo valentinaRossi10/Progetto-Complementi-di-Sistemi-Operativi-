@@ -50,5 +50,8 @@ void vr_shell_update_path(char* new_path, Direction direction){
 }
 
 int vr_shell_interpreter(char* cmd){
+    int num_tokens = 0; 
 
+    for (int i = 0; i < MAX_NUM_FUNCTIONS; i++){
+    }
 }
