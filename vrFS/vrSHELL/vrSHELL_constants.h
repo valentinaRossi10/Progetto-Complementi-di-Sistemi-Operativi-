@@ -24,3 +24,5 @@
 #define ERR_FILE_NOT_A_DIR -3
 #define ERR_FILE_IS_A_DIR -5
 #define ERR_FORMAT -4
+#define DISK_NOT_READY -6
+#define APPEND_OVER_DISK_LIMIT -7

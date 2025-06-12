@@ -44,7 +44,7 @@ void vr_append(){
                 continue;
             }else{
                 if (strtok(NULL,"/") != NULL){ //trying to access a file as if it was a directory
-                    printf("rm: %s: File o directory non esistente\n", token);
+                    printf("append: %s: File o directory non esistente\n", token);
                     executing_command->return_value = ERR_FILE_NOT_FOUND;
                     return;
                 }

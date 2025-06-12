@@ -48,8 +48,11 @@ void vr_ls(){
             }
         }
     }
-
     int num_files = fcb_to_list->size / sizeof(FCB);
+    if (num_files == 0){
+        executing_command->return_value = SUCCESS;
+        return;
+    }
     char* dest = (char*)malloc(fcb_to_list->size);
     int ret = vrFS_readFile(disk_layout, fcb_to_list, dest);
     assert(ret == SUCCESS && "read error");

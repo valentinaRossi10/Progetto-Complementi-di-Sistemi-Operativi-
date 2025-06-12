@@ -38,10 +38,14 @@ void vr_touch(){
                     FCB new_file;
                     FCB_init(&new_file);
                     new_file.directory = aux_dir;
-                    new_file.filename = token;
+
+                    new_file.filename = (char*)malloc(strlen(token)+1);
+                    strcpy(new_file.filename, token);
+
                     new_file.is_directory = 0;
                     new_file.ownership = aux_dir->ownership;
                     int x = vrFS_load_file(disk_layout, &new_file);
+
                     if (x == NO_FREE_BLOCKS) {
                         executing_command->return_value = NO_FREE_BLOCKS;
                         printf("touch: Memoria piena\n");
@@ -58,7 +62,9 @@ void vr_touch(){
                 }
             }
             if (dest_fcb.is_directory) {
-                aux_dir = &dest_fcb;
+                FCB* next_dir = (FCB*)malloc(sizeof(FCB));
+                *next_dir = dest_fcb;
+                aux_dir = next_dir;
                 token = strtok(NULL,"/");
             }
         }

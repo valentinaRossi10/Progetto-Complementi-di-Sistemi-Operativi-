@@ -14,5 +14,15 @@ void vr_format(){
         return;
     }
     printf("format : done\n");
+    FCB* root = malloc(sizeof(FCB));
+    memset(root, 0, sizeof(FCB));    
+    FCB_init(root);
+    root->directory = NULL;
+    root->filename = "";
+    root->is_directory = 1;
+    root->ownership = getenv("LOGNAME");
+    vrFS_load_file(disk_layout, root);
+    currentFCB = root;
+    executing_command->return_value = SUCCESS;
 
 }

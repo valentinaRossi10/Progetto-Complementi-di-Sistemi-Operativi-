@@ -8,7 +8,6 @@ HEADERS=vrSHELL_commands.h\
 	vrSHELL.h\
 	
 OBJS=vrSHELL_commands.o\
-	vrSHELL_test.o\
 	vr_ls.o\
 	vr_cd.o\
 	vr_cat.o\
@@ -22,7 +21,7 @@ OBJS=vrSHELL_commands.o\
 
 LIBS=vrSHELL.a
 
-BINS=vrSHELL_test
+BINS=vr_SHELL
 
 
 .phony: clean all
@@ -37,7 +36,7 @@ vrSHELL.a: $(OBJS)
 	$(AR) -rcs $@ $^
 	$(RM) $(OBJS)
 
-vrSHELL_test:		vrSHELL_test.c $(LIBS)
+vr_SHELL:		vr_SHELL.c $(LIBS)
 	$(CC) $(CCOPTS) -o $@ $^ ../vrFS/vrFS.a -g
 
 clean:

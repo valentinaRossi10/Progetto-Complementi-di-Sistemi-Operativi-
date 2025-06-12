@@ -3,7 +3,11 @@
 Command c;
 Command* executing_command = &c;
 
+ShellCommandType command_vector[MAX_NUM_FUNCTIONS];
+int command_num_args[MAX_NUM_FUNCTIONS];
+
 void vrSHELL_mappings(){
+
     command_vector[SHELL_FORMAT] = vr_format;
     command_num_args[SHELL_FORMAT] = 2;
 

@@ -103,6 +103,7 @@ int vrFS_readFile(DiskLayout* disk_layout, FCB* fcb, char* dest){
     int index = fcb->first_index;
     int read_bytes = 0 ,ret, size = BLOCK_SIZE;
     int bytes_left = fcb->size;
+    
     while(read_bytes < bytes_left){
         if (bytes_left < BLOCK_SIZE){
             size = bytes_left; 
