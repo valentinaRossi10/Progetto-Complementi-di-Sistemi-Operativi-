@@ -25,9 +25,7 @@ void vr_mkdir(){
                 token = strtok(NULL,"/");
                 continue;
             }else{
-                FCB* parent = (FCB*)malloc(sizeof(FCB));
-                *parent = *(aux_dir->directory);
-                aux_dir = parent;
+                aux_dir = aux_dir->directory;
                 token = strtok(NULL,"/");
                 continue;
             }

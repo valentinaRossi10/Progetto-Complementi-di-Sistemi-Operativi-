@@ -86,4 +86,36 @@ valore di ritorno
 
 quando eseguo comando processo nuovo 
 gestione scrittura/lettura da terminale
+quando nuovo comando devo eliminare retvalue ecc...
+attenzione alle printf nelle funzioni, per ora ok ma dopo quando avrai creazione di processi ecc rischi inconsistenze: prenderai ret val e lo stampi da processo padre 
 
+quando farò funzione create file dovrò aggiornare il fcb del current
+
+
+
+aggiungi i permessi 
+unifica costanti
+lingua di commenti e shell (inglese meglio)
+write_file dovrebbe ritornare i byte scritti
+
+
+
+1. commenti e lingua shell 
+2. completa commenti delle funzioni 
+3. 
+
+
+int pid = fork();
+        int x;
+        if (pid == -1){
+            break;
+        }else if (pid == 0){
+            x = vr_shell_interpreter(line);
+            if (x == SHELL_CLOSE) {
+                printf("closing the shell...\n");
+                break;
+            exit(0);
+        }
+
+        }
+        wait();
