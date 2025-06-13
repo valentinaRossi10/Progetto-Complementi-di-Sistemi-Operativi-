@@ -10,6 +10,7 @@
 
 
 void FCB_init(FCB* fcb){
+    //inizializza i valori della struct fcb 
     fcb->filename = 0;
     fcb->first_index = -1; 
     fcb->last_index = -1;
@@ -19,15 +20,14 @@ void FCB_init(FCB* fcb){
     fcb->size = 0;
 }
 
-int FCB_free(FCB* fcb){
-    return 0;
-}
 
 
 /*useful functions*/
 
 
 void FCB_print(FCB* fcb){
+    //prints the content of the fcb
+    //useful for debugging 
     printf("\n{\n");
     printf("\t[filename: %s]\n\t[first block: %d - last block: %d]\n", fcb->filename, fcb->first_index, fcb->last_index);
     if(fcb->directory) printf("\t[parent directory: %s]\n", fcb->directory->filename);
@@ -38,6 +38,7 @@ void FCB_print(FCB* fcb){
 }
 
 void FCB_deepcopy(FCB* src, FCB* dest){
+    //deep copy of src attributes into dest 
     assert(src && dest && "null pointers");
     dest->directory = src->directory;
     dest->filename = src->filename;

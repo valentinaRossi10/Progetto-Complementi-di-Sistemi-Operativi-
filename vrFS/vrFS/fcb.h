@@ -8,14 +8,11 @@ typedef struct FCB{
     int last_index;
     struct FCB* directory;
     int size;
-    //permissions? 
     char* ownership;
-    int is_directory; // 0 means it's not a directory 1 means it is a directory 
+    int is_directory; // boolean value, 1 means it is a directory 0 means it is a regular file  
 }FCB;
 
 
-
 void FCB_init(FCB* fcb);
-int FCB_free(FCB* fcb);
 void FCB_print(FCB* fcb);
 void FCB_deepcopy(FCB* src, FCB* dest);
