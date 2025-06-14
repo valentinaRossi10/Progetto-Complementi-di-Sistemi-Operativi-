@@ -10,7 +10,7 @@
 #include "vrFS_constants.h"
 #include "fcb.h"
 
-typedef char* Disk;
+typedef char* Disk; // using char* pointer cause simplifies pointer arithmetic 
 typedef int* FAT;
 typedef int* FreeBlocksTable;
 
@@ -21,11 +21,11 @@ typedef enum{
 
 //useful data structure to keep track of the disk 
 typedef struct DiskLayout{
-    int fd; // useful for shutdown
+    int fd; //file descriptor of the disk file 
     Disk disk;
     FAT fat;
-    FreeBlocksTable free_table;
-    Disk start_of_files; // free_table contains all block with corresponding flag  
+    FreeBlocksTable free_table; // free_table contains all block with corresponding flag
+    Disk start_of_files;   
 }DiskLayout;
 
 int disk_init(DiskLayout* disk_layout, int block_num, char* filename);
