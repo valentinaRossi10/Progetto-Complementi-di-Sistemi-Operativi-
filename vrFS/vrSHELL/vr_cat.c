@@ -52,11 +52,9 @@ void vr_cat(){
         return;
            
     }
+    //everything ok: read the file and print the result 
     char* dest = (char*)malloc(dest_fcb.size);
     vrFS_readFile(disk_layout, &dest_fcb, dest);
     printf("%s\n", dest);
-    executing_command->return_value = SUCCESS;
-    
-
-    
+    executing_command->return_value = SUCCESS;    
 }

@@ -59,27 +59,48 @@ void vr_shell_update_path(char* new_path, Direction direction){
     }
 }
 
-int vr_shell_interpreter(char* cmd){
+int vr_shell_interpreter(char* cmd, int* ret_val){
     //parsing of the command string association to the corresponding command number
     //execution of command_wrapper
     char* safe_copy = (char*)malloc(strlen(cmd)+1); // strtok modifies the string so we make a copy 
     strcpy(safe_copy, cmd);
+
     char* token = strtok(safe_copy, " \t\n"); 
     int cmd_num = -1;
-    if (strcmp(token,"format")!= 0 && !format_done){
-        printf("disco non pronto, eseguire format <filename> <size>\n");
+
+    if (token == NULL){ // if only spaces are written
+        return SUCCESS; 
+    }
+    
+    if (strcmp(token,"format")!= 0 && !format_done){ 
+        // we need to have executed format before we execute any other command 
+        printf("Disco non pronto, eseguire format <filename> <size>\n");
         return DISK_NOT_READY;
     }
 
     if (strcmp(token,"cd") == 0){
         cmd_num = SHELL_CD;
         char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
         command_wrapper(SHELL_CD, arg);
 
     }else if (strcmp(token, "append") == 0){
         cmd_num = SHELL_APPEND;
         char* arg1 = strtok(NULL, " \t\n");
+        if (arg1 == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
+
         char* arg2 = strtok(NULL, "\n");
+        if (arg2 == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
+
         command_wrapper(SHELL_APPEND, arg1, arg2);
 
 
@@ -97,10 +118,17 @@ int vr_shell_interpreter(char* cmd){
     }else if (strcmp(token, "format") == 0){
         cmd_num = SHELL_FORMAT;
         char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
         char* arg2 = strtok(NULL, " \t\n" );
+        if (arg2 == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
         int arg2_i = atoi(arg2);
         command_wrapper(SHELL_FORMAT, arg, arg2_i);
-
 
     }else if (strcmp(token, "ls") == 0){
         char* arg = strtok(NULL, " \t\n" );
@@ -117,60 +145,61 @@ int vr_shell_interpreter(char* cmd){
     }else if(strcmp(token, "mkdir")== 0){
         cmd_num = SHELL_MKDIR;
         char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
         command_wrapper(SHELL_MKDIR, arg);        
 
     }else if (strcmp(token,"rm") == 0){
         cmd_num = SHELL_RM;
         char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
         command_wrapper(SHELL_RM, arg); 
 
     } else if (strcmp(token,"touch") == 0){
         cmd_num = SHELL_TOUCH;
         char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
         command_wrapper(SHELL_TOUCH, arg); 
 
     }else {
         printf("comando %s non trovato\n", token);
-        return -1;
+        *ret_val = INTERPRETER_ERR;
+        return INTERPRETER_ERR;
     }
+
+    *ret_val = executing_command->return_value;
     return cmd_num;
 }
 
 
 void vr_shell_loop(){
     vr_shell_init();
+    int ret_val;
+
     while(1){
-        vr_shell_prompt();
+        vr_shell_prompt(); // print the prompt 
         char line[100];
         memset(line, '\0', 100);
         fgets(line, 100, stdin);
-        if (strtok(line, "\n") == NULL) continue; //nothing was written
+        if (strtok(line, "\n") == NULL) continue; // nothing was written: next iteration
 
-        int x = vr_shell_interpreter(line);
+        int x = vr_shell_interpreter(line, &ret_val); // interpretation of what was written 
         
-
         if (x == SHELL_CLOSE) {
             printf("closing the shell...\n");
             break;
-        }else if (x == SHELL_FORMAT && executing_command->return_value == SUCCESS){
+        }else if (x == SHELL_FORMAT && ret_val == SUCCESS){
             format_done = 1;
         }
 
-        /*int pid = fork();
-        int x;
-        if (pid == -1){
-            break;
-        }else if (pid == 0){
-            x = vr_shell_interpreter(line);
-            if (x == SHELL_CLOSE) {
-                printf("closing the shell...\n");
-                break;
-            exit(0);
-        }
-
-        }
-        wait(NULL);
-        */
     }
 
 }

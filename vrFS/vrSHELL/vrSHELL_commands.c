@@ -7,6 +7,7 @@ ShellCommandType command_vector[MAX_NUM_FUNCTIONS];
 int command_num_args[MAX_NUM_FUNCTIONS];
 
 void vrSHELL_mappings(){
+    // populates the arrays
 
     command_vector[SHELL_FORMAT] = vr_format;
     command_num_args[SHELL_FORMAT] = 2;

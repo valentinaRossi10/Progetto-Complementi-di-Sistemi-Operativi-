@@ -6,7 +6,6 @@
 
 void vr_cd(){
 
-
     char* filename = (char*)malloc(MAX_FILENAME_LENGTH);
     strcpy(filename,  (char*)executing_command->command_args[0]);
     
@@ -20,7 +19,6 @@ void vr_cd(){
         }
         else if (strcmp("..", token) == 0) {
             if (currentFCB->directory == NULL) {
-                // observing the behavior of my shell i noticed that 
                 // if you are in the root directory and execute cd ..
                 // it does not raise any error, it simply stays there
                 token = strtok(NULL,"/");
@@ -29,7 +27,7 @@ void vr_cd(){
                  FCB* parent = (FCB*)malloc(sizeof(FCB));
                 *parent = *(currentFCB->directory);
                 currentFCB = parent;
-                vr_shell_update_path(token, up);
+                vr_shell_update_path(token, up); // to update the prompt string
                 token = strtok(NULL,"/");
                 continue;
             }
@@ -40,7 +38,7 @@ void vr_cd(){
                 executing_command->return_value = ERR_FILE_NOT_FOUND;
                 return;
             }
-            if (!dest_fcb.is_directory){
+            if (!dest_fcb.is_directory){ // check that it is a directory 
                 printf("cd: %s: Non è una directory", dest_fcb.filename);
                 executing_command->return_value = ERR_FILE_NOT_A_DIR;
                 return;

@@ -58,6 +58,10 @@ void vr_mkdir(){
             if (dest_fcb.is_directory) {
                 aux_dir = &dest_fcb;
                 token = strtok(NULL,"/");
+                if (token == NULL){ // we are trying to create a folder that already exists
+                    printf("mkdir: impossibile creare la directory %s: File già esistente\n", dest_fcb.filename);
+
+                }
             }
         }
     }

@@ -19,6 +19,6 @@ void vr_shell_loop();
 
 void vr_shell_prompt();
 
-int vr_shell_interpreter(char* cmd);
+int vr_shell_interpreter(char* cmd, int* ret_val);
 
 void vr_shell_update_path();

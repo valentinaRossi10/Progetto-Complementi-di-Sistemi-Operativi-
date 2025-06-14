@@ -5,7 +5,6 @@
 
 
 void vr_rm(){
-    
     char* filename = (char*)malloc(MAX_FILENAME_LENGTH+1);
     
     FCB* aux_dir;
