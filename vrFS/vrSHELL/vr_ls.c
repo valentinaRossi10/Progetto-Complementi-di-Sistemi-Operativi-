@@ -24,7 +24,6 @@ void vr_ls(){
                     token = strtok(NULL,"/");
                     continue;
                 }else{
-                    printf("here \n");
                     /*FCB* parent = (FCB*)malloc(sizeof(FCB));
                     *parent = *(fcb_to_list->directory);
                     fcb_to_list = parent;

@@ -58,11 +58,15 @@ void vr_touch(){
                     return;
                 }
             }
-            if (dest_fcb.is_directory) {
+            else if (dest_fcb.is_directory) {
                 FCB* next_dir = (FCB*)malloc(sizeof(FCB));
                 *next_dir = dest_fcb;
                 aux_dir = next_dir;
                 token = strtok(NULL,"/");
+            } else {
+                printf("touch: %s: File con lo stesso nome già esistente\n", dest_fcb.filename);
+                executing_command->return_value = ERR_FILE_ALREADY_EXISTS;
+                return;
             }
         }
     }

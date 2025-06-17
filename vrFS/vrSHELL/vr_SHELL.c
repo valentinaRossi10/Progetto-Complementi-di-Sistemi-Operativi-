@@ -1,5 +1,7 @@
 #include "vr_SHELL.h"
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
 
@@ -187,12 +189,23 @@ void vr_shell_loop(){
 
     while(1){
         vr_shell_prompt(); // print the prompt 
-        char line[100];
-        memset(line, '\0', 100);
-        fgets(line, 100, stdin);
-        if (strtok(line, "\n") == NULL) continue; // nothing was written: next iteration
+        char* line = NULL;
+        size_t len = 0;
+        int read = getline(&line, &len, stdin);
+        assert(read > 0);
 
+        if (line[read-1] == '\n') {
+            line[read-1] ='\0';
+        }
+        if (strlen(line) == 0) {
+            free(line);//getline allocates line
+            continue;
+        }
+
+        
         int x = vr_shell_interpreter(line, &ret_val); // interpretation of what was written 
+        free(line); //getline allocates line
+
         
         if (x == SHELL_CLOSE) {
             printf("closing the shell...\n");
