@@ -1,16 +1,16 @@
 #pragma once
 
 //shell commands' numbers
-#define SHELL_FORMAT 1
-#define SHELL_MKDIR 2
-#define SHELL_CD 3
-#define SHELL_TOUCH 4
-#define SHELL_CAT 5
-#define SHELL_LS 6
-#define SHELL_APPEND 7
-#define SHELL_RM 8
-#define SHELL_CLOSE 9
-#define SHELL_LS_WITH_ARG 10
+#define SHELL_FORMAT 0
+#define SHELL_MKDIR 1
+#define SHELL_CD 2
+#define SHELL_TOUCH 3
+#define SHELL_CAT 4
+#define SHELL_LS 5
+#define SHELL_APPEND 6
+#define SHELL_RM 7
+#define SHELL_CLOSE 8
+#define SHELL_LS_WITH_ARG 9
 
 //other constants
 #define MAX_NUM_FUNCTIONS 10
@@ -25,3 +25,4 @@
 #define DISK_NOT_READY -6
 #define APPEND_OVER_DISK_LIMIT -7 
 #define INTERPRETER_ERR -8
+

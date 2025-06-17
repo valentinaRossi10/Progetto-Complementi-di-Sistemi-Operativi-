@@ -47,11 +47,12 @@ void vrSHELL_mappings(){
 int command_wrapper(int command_number, ...){
     memset(executing_command->command_args, 0, sizeof(executing_command->command_args));
     int num_args = command_num_args[command_number];
+    
     va_list ap; 
     if (command_number < 0 || command_number > MAX_NUM_FUNCTIONS) return ERR_CMD_OUT_OF_RANGE;
     va_start(ap,command_number);
     for (int i = 0; i < num_args; i++){
-        executing_command->command_args[i] = va_arg(ap, long int);
+        executing_command->command_args[i] = va_arg(ap, void*);
     }
     va_end(ap);
     executing_command->command_number = command_number;

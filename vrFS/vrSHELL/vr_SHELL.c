@@ -127,8 +127,8 @@ int vr_shell_interpreter(char* cmd, int* ret_val){
             printf("Errore argomenti\n");
             return INTERPRETER_ERR;
         }
-        int arg2_i = atoi(arg2);
-        command_wrapper(SHELL_FORMAT, arg, arg2_i);
+       // int arg2_i = atoi(arg2);
+        command_wrapper(SHELL_FORMAT, arg, arg2);
 
     }else if (strcmp(token, "ls") == 0){
         char* arg = strtok(NULL, " \t\n" );
@@ -137,6 +137,7 @@ int vr_shell_interpreter(char* cmd, int* ret_val){
             command_wrapper(SHELL_LS);
         }
         else{
+
             cmd_num = SHELL_LS_WITH_ARG;
             command_wrapper(SHELL_LS_WITH_ARG, arg);
             

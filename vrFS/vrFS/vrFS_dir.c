@@ -24,7 +24,7 @@ void vrFS_update_fcb_in_dir(DiskLayout* disk_layout, FCB* updated_fcb) {
         }
     }
 
-    if (found) {
+    if (found){
         
         int index = dir->first_index;
         int next;
@@ -116,16 +116,18 @@ int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, ch
     int ret = vrFS_readFile(disk_layout, fcb_dir, dest);
     assert(ret == SUCCESS && "read error");
 
-    FCB* fcb_fcb_arrayay = (FCB*)dest; // cast buffer to an fcb_arrayay of FCBs
+    FCB* fcb_fcb_arrayay = (FCB*)dest; // cast buffer to an fcb_array of FCBs
     FCB* aux;
 
     for (int i = 0; i < num_files; i++){
         aux = fcb_fcb_arrayay+i;
         if (strcmp(filename, aux->filename) == 0) {
             FCB_deepcopy(aux, returned_fcb);
+            free(dest);
             return SUCCESS;
         }
     }
+    free(dest);
     return FILE_NOT_FOUND;
 
 }

@@ -10,6 +10,7 @@ void vr_ls(){
     if (executing_command->command_number == SHELL_LS_WITH_ARG){ 
         // need to list a target directory 
         strcpy(filename, (char*)executing_command->command_args[0]);
+
         char* token = strtok(filename,"/");
         FCB dest_fcb;
 
@@ -23,10 +24,14 @@ void vr_ls(){
                     token = strtok(NULL,"/");
                     continue;
                 }else{
-                    FCB* parent = (FCB*)malloc(sizeof(FCB));
+                    printf("here \n");
+                    /*FCB* parent = (FCB*)malloc(sizeof(FCB));
                     *parent = *(fcb_to_list->directory);
                     fcb_to_list = parent;
+                    token = strtok(NULL,"/");*/
+                    fcb_to_list = fcb_to_list->directory;
                     token = strtok(NULL,"/");
+                
                     continue;
                 }
             }else {

@@ -39,7 +39,7 @@ void vr_append(){
             int x = vrFS_dir_search(disk_layout, aux_dir, &dest_fcb, token); 
             // we find for the right fcb in the disk 
             if (x == FILE_NOT_FOUND){
-                printf("rm: %s: File o directory non esistente\n",token);
+                printf("append: %s: File o directory non esistente\n",token);
                 executing_command->return_value = ERR_FILE_NOT_FOUND;
                 return;
             }
