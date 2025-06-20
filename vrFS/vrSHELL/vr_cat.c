@@ -9,7 +9,6 @@ void vr_cat(){
     FCB* file_to_cat;
     file_to_cat = currentFCB;
     strcpy(filename, (char*)executing_command->command_args[0]);
-
     char* token = strtok(filename,"/");
     FCB* dest_fcb;
     while(token != NULL){
@@ -52,9 +51,12 @@ void vr_cat(){
            
     }
     //everything ok: read the file and print the result 
-    char* dest = (char*)malloc(dest_fcb->size);
-    vrFS_readFile(disk_layout, dest_fcb, dest);
-    dest = dest + 136;
-    printf("%s\n", dest);
+    if (dest_fcb->size > sizeof(FCB)){
+        char* dest = (char*)malloc(dest_fcb->size);
+        vrFS_readFile(disk_layout, dest_fcb, dest);
+        dest = dest + sizeof(FCB);
+        printf("%s\n", dest);
+
+    }
     executing_command->return_value = SUCCESS;    
 }

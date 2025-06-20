@@ -6,7 +6,6 @@ void vr_ls(){
     char* filename = (char*)malloc(MAX_FILENAME_LENGTH);
     FCB* fcb_to_list;
     fcb_to_list = currentFCB;
-
     if (executing_command->command_number == SHELL_LS_WITH_ARG){ 
         // need to list a target directory 
         strcpy(filename, (char*)executing_command->command_args[0]);

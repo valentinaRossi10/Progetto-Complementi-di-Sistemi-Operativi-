@@ -17,7 +17,7 @@ void vr_shell_init(){
     //executes the mappings 
     //initializes the path and path_size variables
    // disk_layout = &disk;
-    currentFCB = NULL;
+    //currentFCB = NULL;
     vrSHELL_mappings();
     path = (char*)malloc(1000);
     path_size = 0;
@@ -228,24 +228,10 @@ int main(int argc, char* argv[]){
         char* filename = argv[2]; // filename passed as an argument 
         mode = 1;
         disk_already_init(disk_layout, filename);
-
-        FCB* root = (FCB*)malloc(sizeof(FCB));
-        memset(root, 0, sizeof(FCB));    
-    
-        FCB_init(root);
-        //char* buffer = (char*)malloc(sizeof(FCB));
-        //disk_read_block(disk_layout,buffer,sizeof(FCB),0);
-        //printf("buffer : %s\n",buffer);
-        
-        root = (FCB*)(disk_layout->start_of_files);
-        root->directory = -1;
-        FCB_print(disk_layout, root);
-        currentFCB = root; 
-       // FCB_print(currentFCB);
-    
+        currentFCB = (FCB*)goto_memoryarea(disk_layout, 0); 
 
     }else mode = 0;
-
+    
     vr_shell_loop(mode);
 
 

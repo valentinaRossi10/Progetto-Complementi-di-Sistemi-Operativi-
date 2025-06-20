@@ -1,41 +1,8 @@
 #include "vrFS.h"
 #include <string.h>
 
-/* 
-int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
-    //initializes the first index of the file 
-    //last index = first index : we will update it later with write function
-    FCB* dir_fcb = fcb->directory;
 
-     FIRST THING FIRST IS THIS THE ROOT???
-    if (dir_fcb == NULL){
-        fcb->first_index = 1; //il primo blocco dati disponibile è il blocco 1
-        fcb->last_index = 1;
-        
-        assert(disk_layout->free_table[0] == Free_Block && "ho allocato un file come primo file e non è la root");
-        char* fcb_root = (char*)fcb;
-        disk_write_block(disk_layout, fcb_root, sizeof(FCB), 0, 0); // scrivo fcb della root sempre nel primo blocco
-        disk_layout->free_table[0] = Taken_Block;
-    }
 
-    int ret = vrFS_first_free_block_index(disk_layout);
-    if (ret == NO_FREE_BLOCKS) return NO_FREE_BLOCKS;
-
-    fcb->first_index = ret; // first free block is file's first block 
-    disk_layout->free_table[fcb->first_index] = Taken_Block; // update free_table
-    fcb->last_index = fcb->first_index;
-    
-    
-    if (dir_fcb != NULL){
-        // we need to update the directory the file belongs to 
-        vrFS_writeFile(disk_layout, dir_fcb, (char*)fcb, sizeof(FCB));
-    }
-    return fcb->first_index;
-}
- 
-*/
-
-////TRYING PROF IDEA
 
 int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
     fcb->size = sizeof(FCB); // APPENA CREATO 
@@ -68,31 +35,6 @@ int vrFS_load_file(DiskLayout* disk_layout, FCB* fcb){
     return fcb->first_index;
 
 }
-/*
-int vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
-    if (fcb->is_directory == 1 && fcb->size != 0) {
-        // this means we're trying to remove a directory 
-        // which is not empty NOT ALLOWED
-        return DIRECTORY_NOT_EMPTY;
-    }
-
-    // frees the blocks occupied by the file and formats them 
-    int i = fcb->first_index;
-    int next;
-    while(disk_layout->fat[i]!= -1){
-        next = disk_layout->fat[i];
-        Disk block = vrFS_MemoryBlock_byFatIndex(disk_layout, i);
-        vrFS_format_block(disk_layout, block);
-        disk_layout->fat[i] = -1;
-        assert(disk_layout->free_table[i] == Taken_Block && "block already free");
-        disk_layout->free_table[i] = Free_Block;
-        i = next;
-    }
-    //update directory 
-    vrFS_remove_fcb_from_dir(disk_layout, fcb);
-    return SUCCESS;
-}
-*/
 
 
 int vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
@@ -198,13 +140,6 @@ int vrFS_writeFile(DiskLayout* disk_layout, int block, char* buffer, int buffer_
         offset = 0; 
     }
 
-    //if (fcb->directory == NULL) {
-    //    disk_write_block(disk_layout, (char*)fcb, sizeof(FCB), 0, 0);
-    //}
-
-    //update directory
-    // QUESTA ADESSO NON SERVE -> all'INIZIO DELLA FUNZIONE LA PRIMA COSA CHE FACCIO é modificare il fcb 
-    //vrFS_update_fcb_in_dir(disk_layout, fcb);
     
 
     //adesso il fcb è cambiato

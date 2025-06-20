@@ -85,9 +85,7 @@ int disk_already_init(DiskLayout* disk_layout, char* filename){
     // the flag MAP_SHARED allows us to do side effect on the disk
     disk_layout->disk = (Disk)mmap(NULL, disk_dimension, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
     disk_layout->fat = (int*)disk_layout->disk;  // save start address of fat table
-    printf("prova : fat[0] %d\n" , disk_layout->fat[0]);
     disk_layout->free_table = (int*)(disk_layout->disk + FAT_SIZE);  // save start address of free table
-    printf("prova : free[0] %d, free[1] %d\n", disk_layout->free_table[0], disk_layout->free_table[1]);
 
     disk_layout->start_of_files = disk_layout->disk + 2 * FAT_SIZE; // save start address of file blocks
     disk_layout->fd = fd;
