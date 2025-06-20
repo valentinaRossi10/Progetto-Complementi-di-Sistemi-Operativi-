@@ -13,7 +13,7 @@ void vr_mkdir(){
     strcpy(filename, (char*)executing_command->command_args[0]);
 
     char* token = strtok(filename,"/");
-    FCB dest_fcb;
+    FCB* dest_fcb;
 
     while(token != NULL){
         if (strcmp(".", token) == 0) {
@@ -21,24 +21,28 @@ void vr_mkdir(){
             continue;
         }
         else if (strcmp("..", token) == 0) {
-            if (currentFCB->directory == NULL) {
+            if (currentFCB->directory == -1) {
                 token = strtok(NULL,"/");
                 continue;
             }else{
-                aux_dir = aux_dir->directory;
+                
+                aux_dir = (FCB*) goto_memoryarea(disk_layout, aux_dir->directory);
                 token = strtok(NULL,"/");
                 continue;
             }
         }else {
-            int x = vrFS_dir_search(disk_layout, aux_dir, &dest_fcb, token);
-            if (x == FILE_NOT_FOUND){
+            
+            int fcb_index= vrFS_dir_search(disk_layout, aux_dir->first_index, token);
+            if (fcb_index == FILE_NOT_FOUND){
                 if (strtok(NULL,"/") == NULL){ // here we are, we need to create the file
                     FCB new_file;
                     FCB_init(&new_file);
-                    new_file.directory = aux_dir;
-                    new_file.filename = token;
+                    new_file.directory = aux_dir->first_index; // 
+                    strcpy(new_file.filename, token);
+                    new_file.size = sizeof(FCB);
                     new_file.is_directory = 1;
                     new_file.ownership = aux_dir->ownership;
+                    
                     int x = vrFS_load_file(disk_layout, &new_file);
                     if (x == NO_FREE_BLOCKS) {
                         executing_command->return_value = NO_FREE_BLOCKS;
@@ -55,11 +59,12 @@ void vr_mkdir(){
                     return;
                 }
             }
-            if (dest_fcb.is_directory) {
-                aux_dir = &dest_fcb;
+            dest_fcb = (FCB*) goto_memoryarea(disk_layout, fcb_index);
+            if (dest_fcb->is_directory) {
+                aux_dir = dest_fcb;
                 token = strtok(NULL,"/");
                 if (token == NULL){ // we are trying to create a folder that already exists
-                    printf("mkdir: impossibile creare la directory %s: File già esistente\n", dest_fcb.filename);
+                    printf("mkdir: impossibile creare la directory %s: File già esistente\n", dest_fcb->filename);
 
                 }
             }

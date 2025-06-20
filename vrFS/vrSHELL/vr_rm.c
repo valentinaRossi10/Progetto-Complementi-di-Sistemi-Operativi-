@@ -12,7 +12,7 @@ void vr_rm(){
     strcpy(filename, (char*)executing_command->command_args[0]);
 
     char* token = strtok(filename,"/");
-    FCB dest_fcb;
+    FCB* dest_fcb;
 
     while(token != NULL){
         if (strcmp(".", token) == 0) {
@@ -20,25 +20,26 @@ void vr_rm(){
             continue;
         }
         else if (strcmp("..", token) == 0) {
-            if (currentFCB->directory == NULL) {
+            if (currentFCB->directory == -1) {
                 token = strtok(NULL,"/");
                 continue;
             }else{
-                FCB* parent = (FCB*)malloc(sizeof(FCB));
-                *parent = *(aux_dir->directory);
-                aux_dir = parent;
+                aux_dir = (FCB*)goto_memoryarea(disk_layout, aux_dir->directory);
+                
                 token = strtok(NULL,"/");
                 continue;
             }
         }else {
-            int x = vrFS_dir_search(disk_layout, aux_dir, &dest_fcb, token);
-            if (x == FILE_NOT_FOUND){
+            int fcb_index = vrFS_dir_search(disk_layout, aux_dir->first_index, token);
+            if (fcb_index == FILE_NOT_FOUND){
                 printf("rm: %s: File o directory non esistente\n",token);
                 executing_command->return_value = ERR_FILE_NOT_FOUND;
                 return;
             }
-            if (dest_fcb.is_directory){
-                aux_dir = &dest_fcb;
+            dest_fcb = (FCB*)goto_memoryarea(disk_layout, fcb_index);
+
+            if (dest_fcb->is_directory){
+                aux_dir = dest_fcb;
                 token = strtok(NULL,"/");
                 continue;
             }else{
@@ -51,10 +52,11 @@ void vr_rm(){
             }
         }
     }
-    int x = vrFS_remove_file(disk_layout, &dest_fcb);
+    int x = vrFS_remove_file(disk_layout, dest_fcb);
+
     if (x == DIRECTORY_NOT_EMPTY){
         executing_command->return_value = DIRECTORY_NOT_EMPTY;
-        printf("rm: %s: directory non vuota\n", dest_fcb.filename);
+        printf("rm: %s: directory non vuota\n", dest_fcb->filename);
     }
     else executing_command->return_value = SUCCESS;
 

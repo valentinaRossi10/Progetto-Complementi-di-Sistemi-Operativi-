@@ -6,13 +6,12 @@ void vr_ls(){
     char* filename = (char*)malloc(MAX_FILENAME_LENGTH);
     FCB* fcb_to_list;
     fcb_to_list = currentFCB;
-
+   
     if (executing_command->command_number == SHELL_LS_WITH_ARG){ 
         // need to list a target directory 
         strcpy(filename, (char*)executing_command->command_args[0]);
-
         char* token = strtok(filename,"/");
-        FCB dest_fcb;
+        FCB* dest;
 
         while(token != NULL){
             if (strcmp(".", token) == 0) {
@@ -20,60 +19,55 @@ void vr_ls(){
                 continue;
             }
             else if (strcmp("..", token) == 0) {
-                if (currentFCB->directory == NULL) {
+                if (currentFCB->directory == -1) {
                     token = strtok(NULL,"/");
                     continue;
                 }else{
-                    /*FCB* parent = (FCB*)malloc(sizeof(FCB));
-                    *parent = *(fcb_to_list->directory);
-                    fcb_to_list = parent;
-                    token = strtok(NULL,"/");*/
-                    fcb_to_list = fcb_to_list->directory;
+                    fcb_to_list = (FCB*)goto_memoryarea(disk_layout, fcb_to_list->directory);
                     token = strtok(NULL,"/");
                 
                     continue;
                 }
             }else {
-                int x = vrFS_dir_search(disk_layout, fcb_to_list, &dest_fcb, token);
-                if (x == FILE_NOT_FOUND){
+                int fcb_index = vrFS_dir_search(disk_layout, fcb_to_list->first_index, token);
+                if (fcb_index == FILE_NOT_FOUND){
                     printf("ls: %s: File o directory non esistente\n",token);
                     executing_command->return_value = ERR_FILE_NOT_FOUND;
                     return;
                 }
-                if (!dest_fcb.is_directory){
-                    printf("ls: %s: Non è una directory", dest_fcb.filename);
+                dest = (FCB*)goto_memoryarea(disk_layout, fcb_index);
+
+                if (!dest->is_directory){
+                    printf("ls: %s: Non è una directory", dest->filename);
                     executing_command->return_value = ERR_FILE_NOT_A_DIR;
                     return;
                 }
-                FCB* new_fcb = (FCB*)malloc(sizeof(FCB));
-                *new_fcb = dest_fcb;
-                new_fcb->directory = fcb_to_list;  
-                fcb_to_list = new_fcb;  
+                fcb_to_list = dest;  
                 
                 token = strtok(NULL,"/");
             }
         }
     }
 
-    int num_files = fcb_to_list->size / sizeof(FCB);
+    int num_files = (fcb_to_list->size -sizeof(FCB))/ sizeof(int);
     if (num_files == 0){ //empty folder
         executing_command->return_value = SUCCESS;
         return;
     }
-
     //read the content of the directory 
-    char* dest = (char*)malloc(fcb_to_list->size);
-    int ret = vrFS_readFile(disk_layout, fcb_to_list, dest);
+    char* dest_buf = (char*)malloc(fcb_to_list->size + sizeof(FCB)); //
+    int ret = vrFS_readFile(disk_layout, fcb_to_list, dest_buf);
+    dest_buf = dest_buf+sizeof(FCB);
     assert(ret == SUCCESS && "read error");
-
+    
     //cast it to a fcb array 
-    FCB* fcb_array = (FCB*)dest;
-    FCB* aux;
+    int* array = (int*)dest_buf;
+    FCB aux;
     
     //scan the array
     for (int i = 0; i < num_files; i++){
-        aux = fcb_array+i;
-        printf("%s\n",aux->filename);
+        getFCB_by_block(disk_layout, array[i], &aux); // safe to use this here cause we only print the name 
+        printf("%s\n",aux.filename);
         
     }
     executing_command->return_value = SUCCESS;

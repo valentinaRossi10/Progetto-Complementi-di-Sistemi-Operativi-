@@ -8,7 +8,7 @@ extern int DISK_SIZE; // total space occupied by blocks, fat table and free list
 
 
 /*CONSTANTS: SIZES*/
-#define BLOCK_SIZE 4000
+#define BLOCK_SIZE 4096
 #define MAX_ALLOWED_BLOCKS 100000 // maximum number of blocks allowed (checked during format cmd execution)
 #define MAX_FILENAME_LENGTH 100 
 

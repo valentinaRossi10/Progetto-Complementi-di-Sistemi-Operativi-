@@ -12,7 +12,7 @@ void vr_touch(){
     strcpy(filename, (char*)executing_command->command_args[0]);
 
     char* token = strtok(filename,"/");
-    FCB dest_fcb;
+    FCB* dest_fcb;
 
     while(token != NULL){
         if (strcmp(".", token) == 0) {
@@ -20,23 +20,23 @@ void vr_touch(){
             continue;
         }
         else if (strcmp("..", token) == 0) {
-            if (aux_dir->directory == NULL) {
+            if (aux_dir->directory == -1) {
                 token = strtok(NULL,"/");
                 continue;
             }else{
-                aux_dir = aux_dir->directory;
+                aux_dir = (FCB*)goto_memoryarea(disk_layout, aux_dir->directory);
+                
                 token = strtok(NULL,"/");
                 continue;
             }
         }else {
-            int x = vrFS_dir_search(disk_layout, aux_dir, &dest_fcb, token);
-            if (x == FILE_NOT_FOUND){
+            int fcb_index = vrFS_dir_search(disk_layout, aux_dir->first_index, token);
+            if (fcb_index == FILE_NOT_FOUND){
                 if (strtok(NULL,"/") == NULL){ // here we are, we need to create the file
                     FCB new_file;
                     FCB_init(&new_file);
-                    new_file.directory = aux_dir;
+                    new_file.directory = aux_dir->first_index;
 
-                    new_file.filename = (char*)malloc(strlen(token)+1);
                     strcpy(new_file.filename, token);
 
                     new_file.is_directory = 0;
@@ -58,13 +58,12 @@ void vr_touch(){
                     return;
                 }
             }
-            else if (dest_fcb.is_directory) {
-                FCB* next_dir = (FCB*)malloc(sizeof(FCB));
-                *next_dir = dest_fcb;
-                aux_dir = next_dir;
+            dest_fcb = (FCB*)goto_memoryarea(disk_layout, fcb_index);
+            if (dest_fcb->is_directory) {
+                aux_dir = dest_fcb;
                 token = strtok(NULL,"/");
             } else {
-                printf("touch: %s: File con lo stesso nome già esistente\n", dest_fcb.filename);
+                printf("touch: %s: File con lo stesso nome già esistente\n", dest_fcb->filename);
                 executing_command->return_value = ERR_FILE_ALREADY_EXISTS;
                 return;
             }

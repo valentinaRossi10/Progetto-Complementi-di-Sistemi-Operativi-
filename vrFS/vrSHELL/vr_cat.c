@@ -11,32 +11,31 @@ void vr_cat(){
     strcpy(filename, (char*)executing_command->command_args[0]);
 
     char* token = strtok(filename,"/");
-    FCB dest_fcb;
+    FCB* dest_fcb;
     while(token != NULL){
         if (strcmp(".", token) == 0) {
             token = strtok(NULL, "/");
             continue;
         }
         else if (strcmp("..", token) == 0) {
-            if (currentFCB->directory == NULL) {
+            if (currentFCB->directory == -1) {
                 token = strtok(NULL,"/");
                 continue;
             }else{
-                FCB* parent = (FCB*)malloc(sizeof(FCB));
-                *parent = *(file_to_cat->directory);
-                file_to_cat = parent;
+                file_to_cat = (FCB*)goto_memoryarea(disk_layout, file_to_cat->directory);
                 token = strtok(NULL,"/");
                 continue;
             }
         }else {
-            int x = vrFS_dir_search(disk_layout, file_to_cat, &dest_fcb, token);
-            if (x == FILE_NOT_FOUND){
+            int fcb_index = vrFS_dir_search(disk_layout, file_to_cat->first_index, token);
+            if (fcb_index == FILE_NOT_FOUND){
                 printf("cat: %s: File o directory non esistente\n",token);
                 executing_command->return_value = ERR_FILE_NOT_FOUND;
                 return;
             }
-            if (dest_fcb.is_directory) {
-                file_to_cat = &dest_fcb;
+            dest_fcb = (FCB*) goto_memoryarea(disk_layout, fcb_index);
+            if (dest_fcb->is_directory) {
+                file_to_cat = dest_fcb;
                 token = strtok(NULL,"/");
             }else{
                 if (strtok(NULL,"/") != NULL){ //trying to access a file as if it was a directory
@@ -46,15 +45,16 @@ void vr_cat(){
             }
         }
     }
-    if (dest_fcb.is_directory){
-        printf("cat: %s: È una directory\n", dest_fcb.filename);
+    if (dest_fcb->is_directory){
+        printf("cat: %s: È una directory\n", dest_fcb->filename);
         executing_command->return_value = ERR_FILE_IS_A_DIR;
         return;
            
     }
     //everything ok: read the file and print the result 
-    char* dest = (char*)malloc(dest_fcb.size);
-    vrFS_readFile(disk_layout, &dest_fcb, dest);
+    char* dest = (char*)malloc(dest_fcb->size);
+    vrFS_readFile(disk_layout, dest_fcb, dest);
+    dest = dest + 136;
     printf("%s\n", dest);
     executing_command->return_value = SUCCESS;    
 }

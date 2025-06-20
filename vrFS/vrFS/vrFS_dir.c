@@ -1,5 +1,5 @@
 #include "vrFS_dir.h"
-
+/*
 void vrFS_update_fcb_in_dir(DiskLayout* disk_layout, FCB* updated_fcb) {
     // update a fcb on disk 
     FCB* dir = updated_fcb->directory;
@@ -48,6 +48,7 @@ void vrFS_update_fcb_in_dir(DiskLayout* disk_layout, FCB* updated_fcb) {
 
     free(buffer);
 }
+ 
 
 
 void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, FCB* fcb_to_remove) {
@@ -99,35 +100,107 @@ void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, FCB* fcb_to_remove) {
 
     free(buffer);
     free(new_buffer);
+}*/
+
+void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, int block_to_remove) {
+    FCB* fcb_to_remove;
+    char* buffer2 = (char*)malloc(sizeof(FCB));
+    disk_read_block(disk_layout,buffer2, sizeof(FCB), block_to_remove);
+    fcb_to_remove = (FCB*) buffer2 ;
+
+    int dir_block = fcb_to_remove->directory;
+    if (dir_block== -1) return;
+
+    FCB* dir;
+    char* bufferdir = (char*)malloc(sizeof(FCB));
+    disk_read_block(disk_layout, bufferdir, sizeof(FCB), dir_block);
+    dir = (FCB*)bufferdir;
+
+    int num_files = (dir->size- sizeof (FCB)) /sizeof(int);
+    char* buffer = (char*)malloc(dir->size); // buffer to store the directory content
+
+    int ret = vrFS_readFile(disk_layout, dir, buffer);
+    assert(ret == SUCCESS && "read error");
+
+    
+    int* array = (int*)buffer;
+
+    // allocate a new buffer to store the updated directory (excluding the FCB to remove)
+    char* new_buffer = (char*)malloc(dir->size); 
+    int* new_array = (int*)new_buffer;
+
+    int new_index = 0;
+    // Copy all indexes except the one to remove
+    for (int i = 0; i < num_files; i++) { 
+        if (array[i] != block_to_remove) {
+            new_array[new_index] = array[i];
+            new_index++;
+        }
+    }
+
+    int i = dir->first_index;
+    int next;
+    vrFS_format_first_block(disk_layout, i); // DELPRIMO BLOCCO PULISCO SOLO LA PARTE DATI NON FCB
+    //clear the blocks currently used by the directory 
+    while (disk_layout->fat[i] != -1) {
+        next = disk_layout->fat[i]; //Non pulisco il primo senno mi levo pure i fcb 
+        Disk block = vrFS_MemoryBlock_byFatIndex(disk_layout, next);
+        vrFS_format_block(disk_layout, block);
+        disk_layout->fat[i] = -1;
+        disk_layout->free_table[next] = Free_Block;
+        i = next;
+    }
+
+    dir->size = 0;
+    dir->last_index = dir->first_index;
+
+    // write the updated directory content back to disk  
+    ret = vrFS_writeFile(disk_layout, dir->first_index, new_buffer, new_index * sizeof(FCB));
+    assert(ret == SUCCESS && "write error");
+
+    free(buffer);
+    free(new_buffer);
 }
 
 
-int vrFS_dir_search(DiskLayout* disk_layout, FCB* fcb_dir, FCB* returned_fcb, char* filename){
+int vrFS_dir_search(DiskLayout* disk_layout, int dir_block, char* filename){
     //Looks for a file named 'filename' inside the directory 'fcb_dir'.
     //Reads the content of the directory (a sequence of the FCBs) from the disk.
     //if a matching fcb IS FOUND, it is copied into 'returned_fcb'
     //Otherwise, FILE_NOT_FOUND is returned otherwise.
 
+    FCB* fcb_dir;
+    char* buffer2 = (char*)malloc(sizeof(FCB));
+    disk_read_block(disk_layout,buffer2, sizeof(FCB), dir_block);
+    fcb_dir = (FCB*) buffer2 ;
+
     if (!fcb_dir->is_directory) return NOT_A_DIR;
 
-    int num_files = fcb_dir->size / sizeof(FCB);
+
+    int num_files = (fcb_dir->size - sizeof(FCB)) / sizeof(int);
+    if (num_files == 0) return FILE_NOT_FOUND;
+    
+    
     char* dest = (char*)malloc(fcb_dir->size);
 
     int ret = vrFS_readFile(disk_layout, fcb_dir, dest);
+    dest = dest + sizeof(FCB);
+    
     assert(ret == SUCCESS && "read error");
 
-    FCB* fcb_fcb_arrayay = (FCB*)dest; // cast buffer to an fcb_array of FCBs
-    FCB* aux;
+    int* array = (int*)dest; // cast buffer to an fcb_array of FCBs //NOW READS INTEGERS
+    FCB aux;
 
     for (int i = 0; i < num_files; i++){
-        aux = fcb_fcb_arrayay+i;
-        if (strcmp(filename, aux->filename) == 0) {
-            FCB_deepcopy(aux, returned_fcb);
-            free(dest);
+        getFCB_by_block(disk_layout, array[i], &aux);
+
+        if (strcmp(filename, aux.filename) == 0) {
+            return array[i];
+            //free(dest);
             return SUCCESS;
         }
     }
-    free(dest);
+    //free(dest);
     return FILE_NOT_FOUND;
 
 }

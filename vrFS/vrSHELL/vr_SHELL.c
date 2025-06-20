@@ -16,7 +16,7 @@ int format_done = 0;
 void vr_shell_init(){
     //executes the mappings 
     //initializes the path and path_size variables
-    disk_layout = &disk;
+   // disk_layout = &disk;
     currentFCB = NULL;
     vrSHELL_mappings();
     path = (char*)malloc(1000);
@@ -61,7 +61,7 @@ void vr_shell_update_path(char* new_path, Direction direction){
     }
 }
 
-int vr_shell_interpreter(char* cmd, int* ret_val){
+int vr_shell_interpreter(char* cmd, int* ret_val, int mode){
     //parsing of the command string association to the corresponding command number
     //execution of command_wrapper
     char* safe_copy = (char*)malloc(strlen(cmd)+1); // strtok modifies the string so we make a copy 
@@ -74,7 +74,7 @@ int vr_shell_interpreter(char* cmd, int* ret_val){
         return SUCCESS; 
     }
     
-    if (strcmp(token,"format")!= 0 && !format_done){ 
+    if (strcmp(token,"format")!= 0 && !format_done && mode == 0 ){ 
         // we need to have executed format before we execute any other command 
         printf("Disco non pronto, eseguire format <filename> <size>\n");
         return DISK_NOT_READY;
@@ -183,9 +183,10 @@ int vr_shell_interpreter(char* cmd, int* ret_val){
 }
 
 
-void vr_shell_loop(){
+void vr_shell_loop(int mode){
     vr_shell_init();
     int ret_val;
+    
 
     while(1){
         vr_shell_prompt(); // print the prompt 
@@ -202,11 +203,10 @@ void vr_shell_loop(){
             continue;
         }
 
-        
-        int x = vr_shell_interpreter(line, &ret_val); // interpretation of what was written 
+        int x = vr_shell_interpreter(line, &ret_val, mode); // interpretation of what was written 
         free(line); //getline allocates line
-
         
+
         if (x == SHELL_CLOSE) {
             printf("closing the shell...\n");
             break;
@@ -219,6 +219,35 @@ void vr_shell_loop(){
 }
 
 
-int main(){
-    vr_shell_loop();
+int main(int argc, char* argv[]){
+    
+    int mode = -1;
+    disk_layout = &disk;
+
+    if (argc == 3 && strcmp(argv[1], "formatted") == 0){
+        char* filename = argv[2]; // filename passed as an argument 
+        mode = 1;
+        disk_already_init(disk_layout, filename);
+
+        FCB* root = (FCB*)malloc(sizeof(FCB));
+        memset(root, 0, sizeof(FCB));    
+    
+        FCB_init(root);
+        //char* buffer = (char*)malloc(sizeof(FCB));
+        //disk_read_block(disk_layout,buffer,sizeof(FCB),0);
+        //printf("buffer : %s\n",buffer);
+        
+        root = (FCB*)(disk_layout->start_of_files);
+        root->directory = -1;
+        FCB_print(disk_layout, root);
+        currentFCB = root; 
+       // FCB_print(currentFCB);
+    
+
+    }else mode = 0;
+
+    vr_shell_loop(mode);
+
+
+    
 }

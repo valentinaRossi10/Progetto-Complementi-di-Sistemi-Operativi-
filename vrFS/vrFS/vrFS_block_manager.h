@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include "fcb.h"
 
 
 
@@ -16,3 +17,4 @@ void vrFS_format_disk(DiskLayout* disk_layout);
 Disk vrFS_MemoryBlock_byFatIndex(DiskLayout* disk_layout, int index);
 int vrFS_BlockIndex_byBlock(DiskLayout* disk_layout, Disk block);
 int vrFS_first_free_block_index(DiskLayout* disk_layout);
+void vrFS_format_first_block(DiskLayout* disk_layout, int index);

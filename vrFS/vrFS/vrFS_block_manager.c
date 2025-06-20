@@ -35,6 +35,13 @@ void vrFS_format_block(DiskLayout* disk_layout, Disk block){
 } 
 
 
+void vrFS_format_first_block(DiskLayout* disk_layout, int index){
+
+    //formats a block setting all its bits to 0 
+    Disk block = vrFS_MemoryBlock_byFatIndex(disk_layout, index);
+    memset(block+sizeof(FCB), 0, BLOCK_SIZE-sizeof(FCB));
+} 
+
 void vrFS_format_disk(DiskLayout* disk_layout){
     //it formats all the blocks of the disk 
     for (int i = 0; i < MAX_NUM_BLOCK; i++){

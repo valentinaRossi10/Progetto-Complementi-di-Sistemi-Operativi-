@@ -55,6 +55,48 @@ int disk_init(DiskLayout* disk_layout, int block_num, char* filename){
 
 }
 
+int disk_already_init(DiskLayout* disk_layout, char* filename){ 
+    //open (or create) a file which represents our disk 
+    int fd = open(filename, O_RDWR|O_CREAT, 0660);
+    lseek(fd, 0,SEEK_SET);
+    assert(fd > 0 && "open failed");
+
+    struct stat st;
+    if (fstat(fd, &st) == -1) {
+        return -1;
+    }
+    
+    DISK_SIZE = st.st_size;
+
+    //DISK_SIZE = 2*MAX_NUM_BLOCK*sizeof(int) + BLOCK_SIZE*MAX_NUM_BLOCK
+    //DISK_SIZE = MAX_NUM_BLOCK(2*sizeof(int)+BLOCK_SIZE)
+    MAX_NUM_BLOCK = DISK_SIZE / (2*sizeof(int)+BLOCK_SIZE);
+    //printf("MAX_NUM_BLOCKS : %d\n",MAX_NUM_BLOCK);
+    // populate variables with 
+    // values calculated from block_num
+    TOTAL_SPACE = BLOCK_SIZE*MAX_NUM_BLOCK;
+    FAT_SIZE = MAX_NUM_BLOCK*sizeof(int);
+    DISK_SIZE = 2* FAT_SIZE + TOTAL_SPACE; // two tables: fat and free table
+
+    //resize the file to match DISK_SIZE
+    off_t disk_dimension = DISK_SIZE;
+    
+    // mmap the file 
+    // the flag MAP_SHARED allows us to do side effect on the disk
+    disk_layout->disk = (Disk)mmap(NULL, disk_dimension, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    disk_layout->fat = (int*)disk_layout->disk;  // save start address of fat table
+    printf("prova : fat[0] %d\n" , disk_layout->fat[0]);
+    disk_layout->free_table = (int*)(disk_layout->disk + FAT_SIZE);  // save start address of free table
+    printf("prova : free[0] %d, free[1] %d\n", disk_layout->free_table[0], disk_layout->free_table[1]);
+
+    disk_layout->start_of_files = disk_layout->disk + 2 * FAT_SIZE; // save start address of file blocks
+    disk_layout->fd = fd;
+
+    return SUCCESS;
+
+}
+
+
 void disk_shutdown(DiskLayout* disk_layout){
     // function executed when close cmd is invoked  
     printf("shutdown...\n");

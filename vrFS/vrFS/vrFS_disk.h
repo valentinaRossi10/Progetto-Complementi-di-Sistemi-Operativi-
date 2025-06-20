@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 #include "vrFS_constants.h"
-#include "fcb.h"
+//#include "fcb.h"
 
 typedef char* Disk; // using char* pointer cause simplifies pointer arithmetic 
 typedef int* FAT;
@@ -32,5 +32,5 @@ int disk_init(DiskLayout* disk_layout, int block_num, char* filename);
 void disk_shutdown(DiskLayout* disk_layout);
 int disk_write_block(DiskLayout* disk_layout, void* buffer, int size, int index, int block_offset);
 int disk_read_block(DiskLayout* disk_layout, char* buffer, int size, int index);
-
+int disk_already_init(DiskLayout* disk_layout, char* filename);
 

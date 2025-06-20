@@ -15,10 +15,10 @@ typedef enum {
 
 void vr_shell_init();
 
-void vr_shell_loop();
+void vr_shell_loop(int mode);
 
 void vr_shell_prompt();
 
-int vr_shell_interpreter(char* cmd, int* ret_val);
+int vr_shell_interpreter(char* cmd, int* ret_val, int mode);
 
 void vr_shell_update_path();
