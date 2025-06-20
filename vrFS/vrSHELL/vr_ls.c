@@ -6,7 +6,7 @@ void vr_ls(){
     char* filename = (char*)malloc(MAX_FILENAME_LENGTH);
     FCB* fcb_to_list;
     fcb_to_list = currentFCB;
-   
+
     if (executing_command->command_number == SHELL_LS_WITH_ARG){ 
         // need to list a target directory 
         strcpy(filename, (char*)executing_command->command_args[0]);
@@ -38,7 +38,7 @@ void vr_ls(){
                 dest = (FCB*)goto_memoryarea(disk_layout, fcb_index);
 
                 if (!dest->is_directory){
-                    printf("ls: %s: Non è una directory", dest->filename);
+                    printf("ls: %s: Non è una directory\n", dest->filename);
                     executing_command->return_value = ERR_FILE_NOT_A_DIR;
                     return;
                 }

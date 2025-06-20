@@ -5,10 +5,6 @@
 
 void vr_close(){
     //disk_shutdown(disk_layout);
-    FCB* try = (FCB*)(disk_layout->start_of_files);
-    FCB_print(disk_layout, try);
-    try = (FCB*)(disk_layout->start_of_files+BLOCK_SIZE);
-    FCB_print( disk_layout,try);
     
     // siccome la fcb non 
     msync(disk_layout->disk, DISK_SIZE, MS_SYNC);

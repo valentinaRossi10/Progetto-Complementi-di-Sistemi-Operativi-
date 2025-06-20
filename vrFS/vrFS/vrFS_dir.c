@@ -103,19 +103,13 @@ void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, FCB* fcb_to_remove) {
 }*/
 
 void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, int block_to_remove) {
-    FCB* fcb_to_remove;
-    char* buffer2 = (char*)malloc(sizeof(FCB));
-    disk_read_block(disk_layout,buffer2, sizeof(FCB), block_to_remove);
-    fcb_to_remove = (FCB*) buffer2 ;
 
+    FCB* fcb_to_remove = (FCB*)goto_memoryarea(disk_layout, block_to_remove);
     int dir_block = fcb_to_remove->directory;
     if (dir_block== -1) return;
 
-    FCB* dir;
-    char* bufferdir = (char*)malloc(sizeof(FCB));
-    disk_read_block(disk_layout, bufferdir, sizeof(FCB), dir_block);
-    dir = (FCB*)bufferdir;
-
+    FCB* dir = (FCB*)goto_memoryarea(disk_layout, dir_block);
+    
     int num_files = (dir->size- sizeof (FCB)) /sizeof(int);
     char* buffer = (char*)malloc(dir->size); // buffer to store the directory content
 
@@ -123,10 +117,10 @@ void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, int block_to_remove) {
     assert(ret == SUCCESS && "read error");
 
     
-    int* array = (int*)buffer;
+    int* array = (int*)(buffer+sizeof(FCB));
 
     // allocate a new buffer to store the updated directory (excluding the FCB to remove)
-    char* new_buffer = (char*)malloc(dir->size); 
+    char* new_buffer = (char*)malloc(dir->size-sizeof(FCB)); ////////
     int* new_array = (int*)new_buffer;
 
     int new_index = 0;
@@ -151,11 +145,12 @@ void vrFS_remove_fcb_from_dir(DiskLayout* disk_layout, int block_to_remove) {
         i = next;
     }
 
-    dir->size = 0;
+    dir->size = sizeof(FCB);
     dir->last_index = dir->first_index;
+    disk_write_block(disk_layout, (char*)dir, sizeof(FCB), dir->first_index, 0); // devo aggiornare
 
     // write the updated directory content back to disk  
-    ret = vrFS_writeFile(disk_layout, dir->first_index, new_buffer, new_index * sizeof(FCB));
+    ret = vrFS_writeFile(disk_layout, dir->first_index, new_buffer, new_index * sizeof(int));
     assert(ret == SUCCESS && "write error");
 
     free(buffer);

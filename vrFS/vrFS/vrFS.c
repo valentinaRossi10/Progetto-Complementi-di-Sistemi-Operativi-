@@ -96,7 +96,7 @@ int vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
 
 
 int vrFS_remove_file(DiskLayout* disk_layout, FCB* fcb){
-     if (fcb->is_directory == 1 && fcb->size != 0) {
+     if (fcb->is_directory == 1 && fcb->size != sizeof(FCB)) {
         // this means we're trying to remove a directory 
         // which is not empty NOT ALLOWED
         return DIRECTORY_NOT_EMPTY;
