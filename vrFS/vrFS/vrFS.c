@@ -88,17 +88,16 @@ int vrFS_writeFile(DiskLayout* disk_layout, int block, char* buffer, int buffer_
         // the file occupies an amount of space that fills all the blocks entirely 
         // so we need to start from a new free block
 
-        if (fcb->first_index != block_index){
-            // size != 0, we need to occupy a new block 
-            index_to_write = vrFS_first_free_block_index(disk_layout); // index where we start writing
-            assert(disk_layout->free_table[index_to_write] == Free_Block && "not a free block");
-            if (index_to_write == NO_FREE_BLOCKS) return WRITE_ERROR;
+        index_to_write = vrFS_first_free_block_index(disk_layout); // index where we start writing
+        assert(disk_layout->free_table[index_to_write] == Free_Block && "not a free block");
+        if (index_to_write == NO_FREE_BLOCKS) return WRITE_ERROR;
 
             //update free table and fat table
-            disk_layout->free_table [index_to_write] = Taken_Block;
-            disk_layout->fat[block_index] = index_to_write;  
-            disk_layout->fat[index_to_write] = -1;
-        }
+        disk_layout->free_table [index_to_write] = Taken_Block;
+        disk_layout->fat[block_index] = index_to_write;  
+        disk_layout->fat[index_to_write] = -1;
+        offset  = 0;
+        
     }else{
         // it means we need to restart writing from a certain offset in the last block
         offset = file_size%BLOCK_SIZE;
@@ -135,9 +134,10 @@ int vrFS_writeFile(DiskLayout* disk_layout, int block, char* buffer, int buffer_
 
             //update fcb's last index
             fcb->last_index = new_index_to_write;
+            offset = 0;
 
         } // else we do nothing because if the block is not filled up yet we do not need to take another one
-        offset = 0; 
+        offset += written_bytes; 
     }
 
     
