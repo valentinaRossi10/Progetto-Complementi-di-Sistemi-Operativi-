@@ -113,8 +113,7 @@ int vrFS_writeFile(DiskLayout* disk_layout, int block, char* buffer, int buffer_
         // size is the amount of bytes we will write inside this block 
         if (bytes_left >= BLOCK_SIZE - offset) size = BLOCK_SIZE-offset; 
         else size = bytes_left;
-
-
+        
         ret = disk_write_block(disk_layout, buffer + written_bytes, size, index_to_write, offset); 
         if (ret != size) return WRITE_ERROR;
         written_bytes+=ret;
@@ -135,9 +134,10 @@ int vrFS_writeFile(DiskLayout* disk_layout, int block, char* buffer, int buffer_
             //update fcb's last index
             fcb->last_index = new_index_to_write;
             offset = 0;
+            index_to_write = new_index_to_write;
 
         } // else we do nothing because if the block is not filled up yet we do not need to take another one
-        offset += written_bytes; 
+        else offset += written_bytes; 
     }
 
     
@@ -154,11 +154,12 @@ int vrFS_readFile(DiskLayout* disk_layout, FCB* fcb, char* dest){
     int read_bytes = 0 ,ret, size = BLOCK_SIZE;
     int bytes_left = fcb->size;
     // read the file block by block 
-    while(read_bytes < bytes_left){
+    while(bytes_left > 0){
         if (bytes_left < BLOCK_SIZE){
             size = bytes_left; 
         }
         ret = disk_read_block(disk_layout, dest+read_bytes, size, index);
+        
         if (ret != size) return READ_ERROR;
         bytes_left -= ret;
         read_bytes += ret;

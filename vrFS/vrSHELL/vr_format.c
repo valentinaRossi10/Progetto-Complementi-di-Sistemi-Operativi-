@@ -10,7 +10,6 @@ void vr_format(){
     int size = atoi((char*)executing_command->command_args[1]);
     int ret = disk_init(disk_layout, size, filename);
 
-    //!!!!!!!!!!!
 
     vrFS_format_disk(disk_layout);
     
