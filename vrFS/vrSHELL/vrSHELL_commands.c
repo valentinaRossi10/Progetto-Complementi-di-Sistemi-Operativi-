@@ -39,6 +39,14 @@ void vrSHELL_mappings(){
 
     command_vector[SHELL_CLOSE] = vr_close;
     command_num_args[SHELL_CLOSE] = 0;
+
+    command_vector[SHELL_IMPORT] = vr_import;
+    command_num_args[SHELL_IMPORT] = 1;
+
+    command_vector[SHELL_EXPORT] = vr_export;
+    command_num_args[SHELL_EXPORT] = 1;
+
+
 }
 
 

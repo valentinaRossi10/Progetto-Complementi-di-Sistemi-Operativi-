@@ -31,3 +31,5 @@ void vr_ls();
 void vr_append();
 void vr_rm();
 void vr_close();
+void vr_import();
+void vr_export();

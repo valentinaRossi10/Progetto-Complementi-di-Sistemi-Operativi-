@@ -18,6 +18,9 @@ OBJS=vrSHELL_commands.o\
 	vr_format.o\
 	vr_close.o\
 	vr_SHELL.o\
+	vr_import.o\
+	vr_export.o\
+
 
 LIBS=vrSHELL.a
 

@@ -172,6 +172,24 @@ int vr_shell_interpreter(char* cmd, int* ret_val, int mode){
         }
         command_wrapper(SHELL_TOUCH, arg); 
 
+    }else if (strcmp(token,"export") == 0){
+        cmd_num = SHELL_EXPORT;
+        char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
+        command_wrapper(SHELL_EXPORT, arg); 
+
+    }else if (strcmp(token,"import") == 0){
+        cmd_num = SHELL_IMPORT;
+        char* arg = strtok(NULL, " \t\n" );
+        if (arg == NULL) {
+            printf("Errore argomenti\n");
+            return INTERPRETER_ERR;
+        }
+        command_wrapper(SHELL_IMPORT, arg); 
+
     }else {
         printf("comando %s non trovato\n", token);
         *ret_val = INTERPRETER_ERR;

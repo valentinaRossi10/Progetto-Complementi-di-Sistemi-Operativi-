@@ -11,9 +11,11 @@
 #define SHELL_RM 7
 #define SHELL_CLOSE 8
 #define SHELL_LS_WITH_ARG 9
+#define SHELL_IMPORT 10
+#define SHELL_EXPORT 11
 
 //other constants
-#define MAX_NUM_FUNCTIONS 10
+#define MAX_NUM_FUNCTIONS 12
 #define MAX_NUM_ARGS 2
 
 //errors
@@ -26,4 +28,6 @@
 #define APPEND_OVER_DISK_LIMIT -7 
 #define INTERPRETER_ERR -8
 #define ERR_FILE_ALREADY_EXISTS -9
+#define ERR_IMPORT -10
+#define ERR_EXPORT -11
 
