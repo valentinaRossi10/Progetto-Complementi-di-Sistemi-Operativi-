@@ -1,3 +1,0 @@
-Questo è il file che deve essere importato. 
-Il testo finisce tra 3, 2, 1....
-fine. 

@@ -6,7 +6,7 @@
 void vr_import(){
     char* filename = (char*)executing_command->command_args[0];
     int fd = open(filename, O_RDONLY); //open in read-only
-    if (fd != 0) {
+    if (fd < 0) {
         printf("import: %s: file non esistente\n", filename);
         executing_command->return_value = ERR_IMPORT;
         return;
